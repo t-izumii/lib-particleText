@@ -113,7 +113,6 @@ export class TextureGenerator {
     // キャンバス全体のピクセルデータを取得
     const imageData = this.ctx.getImageData(0, 0, stageWidth, stageHeight).data;
 
-    console.log(imageData);
 
     const particles: Position[] = [];
     let i = 0; // 行カウンター
@@ -153,7 +152,6 @@ export class TextureGenerator {
       }
     }
 
-    console.log(`${particles.length}個のパーティクル座標を生成しました`);
     return particles;
   }
 }

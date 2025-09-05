@@ -162,14 +162,11 @@ export class SettingsManager {
   /**
    * デバッグ情報を出力
    */
-  debugSettings(settings: ResolvedSettings, currentWidth: number): void {
+  debugSettings(_settings: ResolvedSettings, currentWidth: number): void {
     if (typeof window !== "undefined") {
-      console.log(`SettingsManager: 画面幅 ${currentWidth}px`);
-      console.log("適用設定:", settings);
 
       const activeBreakpoint = this.findActiveBreakpoint(currentWidth);
       if (activeBreakpoint !== null) {
-        console.log(`アクティブブレイクポイント: ${activeBreakpoint}px`);
       }
     }
   }

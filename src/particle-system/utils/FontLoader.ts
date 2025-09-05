@@ -24,18 +24,13 @@ export class FontLoader {
     const { familyName, weights = ["400"], subsets = ["latin"] } = options;
     const fontKey = `${familyName}_${weights.join(",")}_${subsets.join(",")}`;
 
-    console.log(`フォントキー生成: ${fontKey}`);
-    console.log(`現在のキャッシュ:`, Array.from(this.loadedFonts));
-
     // 既に読み込み済みの場合はスキップ
     if (this.loadedFonts.has(fontKey)) {
-      console.log(`フォント "${familyName}" は既に読み込み済みです`);
       return;
     }
 
     // 現在読み込み中の場合は、その Promise を待つ
     if (this.loadingFonts.has(fontKey)) {
-      console.log(`フォント "${familyName}" は読み込み中です。完了を待機...`);
       return await this.loadingFonts.get(fontKey)!;
     }
 
@@ -76,8 +71,6 @@ export class FontLoader {
         googleApiUrl += `&subset=${subsets.join(",")}`;
       }
 
-      console.log(`フォント読み込み開始: ${familyName} from ${googleApiUrl}`);
-
       // Google Fonts APIからCSSデータを取得
       const response = await fetch(googleApiUrl);
       if (!response.ok) {
@@ -98,16 +91,12 @@ export class FontLoader {
         const font = new FontFace(`${familyName}`, url, { weight });
         await font.load();
         document.fonts.add(font);
-        console.log(`フォント "${familyName}" weight ${weight} 読み込み完了`);
       });
 
       await Promise.all(fontPromises);
 
       // 読み込み完了をキャッシュに記録
       this.loadedFonts.add(fontKey);
-      console.log(
-        `フォント "${familyName}" の全ウェイト読み込みが完了しました`
-      );
     } catch (error) {
       // フォント読み込み失敗時もアプリケーションを継続
       console.error("フォントの読み込みに失敗しました:", error);
@@ -123,12 +112,8 @@ export class FontLoader {
   static async loadMultipleFonts(
     fontOptions: FontLoadOptions[]
   ): Promise<void> {
-    console.log(`${fontOptions.length}個のフォントを読み込み開始...`);
-
     const promises = fontOptions.map((options) => this.loadFont(options));
     await Promise.allSettled(promises); // 一部失敗しても他の読み込みを継続
-
-    console.log("複数フォント読み込み処理完了");
   }
 
   /**
@@ -147,9 +132,6 @@ export class FontLoader {
   static async waitForFontsReady(): Promise<void> {
     try {
       await document.fonts.ready;
-      console.log("全フォントの読み込みが完了しました");
-    } catch (error) {
-      console.warn("フォント読み込み待機中にエラーが発生しました:", error);
-    }
+    } catch (error) {}
   }
 }

@@ -51,7 +51,6 @@ export class ParticleSystem {
     }
 
     stage.addChild(this.container);
-    console.log(`パーティクル${this.particles.length}個を生成完了`);
   }
 
   private setupEventListeners(_canvas: HTMLCanvasElement): void {
@@ -87,7 +86,6 @@ export class ParticleSystem {
     for (const particle of this.particles) {
       particle.sprite.scale.set(scale);
     }
-    console.log(`ParticleSystem: パーティクルスケールを${scale}に設定`);
   }
 
   /**
@@ -95,19 +93,6 @@ export class ParticleSystem {
    */
   setMouseRadius(radius: number): void {
     this.mouse.radius = radius;
-    console.log(`ParticleSystem: マウス影響範囲を${radius}に設定`);
-  }
-
-  /**
-   * 全パーティクルの色を設定
-   */
-  setParticleTint(tint: number): void {
-    for (const particle of this.particles) {
-      particle.sprite.tint = tint;
-    }
-    console.log(
-      `ParticleSystem: パーティクルの色を0x${tint.toString(16)}に設定`
-    );
   }
 
   /**
@@ -117,8 +102,5 @@ export class ParticleSystem {
     for (const particle of this.particles) {
       particle.setPhysicsParams(friction, moveSpeed);
     }
-    console.log(
-      `ParticleSystem: 物理パラメータを設定 friction:${friction} moveSpeed:${moveSpeed}`
-    );
   }
 }

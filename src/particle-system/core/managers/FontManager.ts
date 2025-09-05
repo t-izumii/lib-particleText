@@ -75,11 +75,7 @@ export class FontManager {
     }
 
     try {
-      console.log(`Google Font読み込み中: ${fontConfig.googleFont.familyName}`);
       await FontLoader.loadFont(fontConfig.googleFont);
-      console.log(
-        `Google Font読み込み完了: ${fontConfig.googleFont.familyName}`
-      );
     } catch (error) {
       console.warn(
         `Google Font読み込み失敗: ${fontConfig.googleFont.familyName}`,
@@ -97,7 +93,6 @@ export class FontManager {
     const weight = this.options.weight || "normal";
     const fontString = `${weight} ${size}px "${fontConfig.familyName}"`;
 
-    console.log(`フォント文字列生成: ${fontString}`);
 
     // フォントが利用可能かチェック
     if (fontConfig.googleFont && !this.isFontAvailable(fontConfig.familyName)) {

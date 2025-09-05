@@ -57,7 +57,6 @@ export class FilterManager {
     // カスタムフィルターを作成
     this.thresholdFilter = new PIXI.Filter(undefined, fragSource, uniformData);
 
-    console.log("FilterManager: フィルターが設定されました");
   }
 
   /**
@@ -67,7 +66,6 @@ export class FilterManager {
     stage.filters = [this.blurFilter];
     stage.filterArea = renderer.screen;
 
-    console.log("FilterManager: ブラーフィルターがstageに適用されました");
   }
 
   /**
@@ -78,9 +76,6 @@ export class FilterManager {
     stage.filters = [this.blurFilter, this.thresholdFilter];
     stage.filterArea = renderer.screen;
 
-    console.log(
-      "FilterManager: 高度なフィルター（ブラー+閾値）がstageに適用されました"
-    );
   }
 
   /**
@@ -88,19 +83,17 @@ export class FilterManager {
    */
   setBlurStrength(blur: number): void {
     this.blurFilter.blur = blur;
-    console.log(`FilterManager: ブラー強度を${blur}に設定`);
   }
 
   /**
-   * 闾値フィルターの闾値を変更
+   * 闘値フィルターの闘値を変更
    */
   setThreshold(threshold: number): void {
     this.thresholdFilter.uniforms.threshold = threshold;
-    console.log(`FilterManager: 闾値を${threshold}に設定`);
   }
 
   /**
-   * 闾値フィルターの色を設定 (hex色からRGB成分を自動計算)
+   * 色を設定 (hex色からRGB成分を自動計算)
    */
   setColor(hexColor: number): void {
     const r = ((hexColor >> 16) & 255) / 255;
@@ -111,13 +104,6 @@ export class FilterManager {
     this.thresholdFilter.uniforms.mg = g;
     this.thresholdFilter.uniforms.mb = b;
 
-    console.log(
-      `FilterManager: 色を0x${hexColor
-        .toString(16)
-        .padStart(6, "0")}に設定 (RGB: ${r.toFixed(2)}, ${g.toFixed(
-        2
-      )}, ${b.toFixed(2)})`
-    );
   }
 
   /**

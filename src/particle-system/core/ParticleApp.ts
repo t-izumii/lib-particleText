@@ -63,8 +63,6 @@ export class ParticleApp {
    */
   private async initialize(): Promise<void> {
     try {
-      console.log("ParticleApp: 初期化開始...");
-
       // フォントを読み込み
       await this.fontManager.loadFontIfRequired();
 
@@ -87,7 +85,6 @@ export class ParticleApp {
       this.setupEventListeners();
 
       this.isInitialized = true;
-      console.log("ParticleApp: 初期化完了！");
     } catch (error) {
       console.error("ParticleApp初期化失敗:", error);
       throw error;
@@ -146,30 +143,20 @@ export class ParticleApp {
       });
 
       // WebGLコンテキストの確認
-      const renderer = this.app.renderer;
-      console.log(`PIXI.js初期化完了 (${width}x${height})`);
-      console.log(
-        `レンダラータイプ: ${
-          renderer.type === PIXI.RENDERER_TYPE.WEBGL ? "WebGL" : "Canvas"
-        }`
-      );
 
       if (isMobile) {
-        console.log("モバイルデバイス用設定を適用");
       }
     } catch (error) {
       console.error("PIXI.js初期化エラー:", error);
 
       // フォールバック: Canvas2Dレンダラーで再試行
       try {
-        console.log("Canvas2Dレンダラーでフォールバック中...");
         this.app = new PIXI.Application({
           width,
           height,
           ...rendererConfig,
           forceCanvas: true,
         });
-        console.log("Canvas2Dレンダラーでの初期化完了");
       } catch (fallbackError) {
         console.error("Canvas2Dフォールバックも失敗:", fallbackError);
         const errorMessage =
@@ -203,8 +190,6 @@ export class ParticleApp {
 
     // テクスチャジェネレーターを初期化
     this.textureGenerator = new TextureGenerator();
-
-    console.log("システムコンポーネント初期化完了");
   }
 
   /**
@@ -267,8 +252,6 @@ export class ParticleApp {
     const text = this.options.text || "TEST";
     const fontString = this.fontManager.generateFontString(settings.size);
 
-    console.log(`テキストパーティクル生成: "${text}" (${fontString})`);
-
     const positions = this.textureGenerator!.setTextWithFont(
       text,
       fontString,
@@ -276,8 +259,6 @@ export class ParticleApp {
       width,
       height
     );
-
-    console.log(`${positions.length}個のパーティクル座標を生成`);
 
     this.particleSystem!.createParticles(positions, this.app!.stage);
     this.particleSystem!.setParticleScale(settings.scale * 0.1);
@@ -305,8 +286,6 @@ export class ParticleApp {
         imageWidth,
         imageHeight,
         (positions) => {
-          console.log(`画像から${positions.length}個のパーティクル座標を生成`);
-
           this.particleSystem!.createParticles(positions, this.app!.stage);
           this.particleSystem!.setParticleScale(settings.scale * 0.1);
 
@@ -329,8 +308,6 @@ export class ParticleApp {
     this.app.ticker.add(() => {
       this.particleSystem!.animate();
     });
-
-    console.log("アニメーションループ開始");
   }
 
   /**
@@ -359,8 +336,6 @@ export class ParticleApp {
 
     // パーティクルを再生成
     await this.regenerateParticles();
-
-    console.log(`リサイズ完了: ${newWidth}x${newHeight}`);
   }
 
   /**
@@ -398,7 +373,7 @@ export class ParticleApp {
     width: number,
     height: number
   ): Promise<void> {
-    const text = this.options.text || "TEST";
+    const text = this.options.text || "Hello World";
     const fontString = this.fontManager.generateFontString(settings.size);
 
     const positions = this.textureGenerator!.setTextWithFont(
@@ -409,7 +384,6 @@ export class ParticleApp {
       height
     );
 
-    console.log(`リサイズ時に${positions.length}個のパーティクルを再生成`);
     this.particleSystem!.createParticles(positions, this.app!.stage);
     this.particleSystem!.setParticleScale(settings.scale * 0.1);
   }
@@ -436,9 +410,6 @@ export class ParticleApp {
         imageWidth,
         imageHeight,
         (positions) => {
-          console.log(
-            `リサイズ時に画像から${positions.length}個のパーティクルを再生成`
-          );
           this.particleSystem!.createParticles(positions, this.app!.stage);
           this.particleSystem!.setParticleScale(settings.scale * 0.1);
           resolve();
@@ -495,14 +466,6 @@ export class ParticleApp {
     }
 
     this.particleSystem.setPhysicsParams(friction, moveSpeed);
-  }
-
-  /**
-   * パーティクルの色を変更（非推奨 - 互換性のため）
-   */
-  setParticleTint(tint: number): void {
-    console.warn("setParticleTintは非推奨です。setColorを使用してください。");
-    this.setColor(tint);
   }
 
   // ========================================
@@ -584,8 +547,6 @@ export class ParticleApp {
 
     this.app.renderer.resize(newWidth, newHeight);
     await this.regenerateParticles();
-
-    console.log(`手動リサイズ完了: ${newWidth}x${newHeight}`);
   }
 
   // ========================================
@@ -596,8 +557,6 @@ export class ParticleApp {
    * アプリケーション終了・クリーンアップ
    */
   destroy(): void {
-    console.log("ParticleApp: クリーンアップ開始");
-
     // イベントマネージャーをクリーンアップ
     this.eventManager.destroy();
 
@@ -614,7 +573,6 @@ export class ParticleApp {
     this.containerElement = undefined;
 
     this.isInitialized = false;
-    console.log("ParticleApp: クリーンアップ完了");
   }
 
   // ========================================
