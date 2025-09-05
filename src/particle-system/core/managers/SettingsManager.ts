@@ -8,7 +8,7 @@ import {
   MOUSE_CONFIG,
   FILTER_CONFIG,
 } from "../../config/particle-config";
-import { SettingsValidator, ValidationError } from "../../utils/errors";
+import { SettingsValidator } from "../../utils/errors";
 
 /**
  * 設定値の統合結果
@@ -163,7 +163,7 @@ export class SettingsManager {
    * デバッグ情報を出力
    */
   debugSettings(settings: ResolvedSettings, currentWidth: number): void {
-    if (process.env.NODE_ENV === "development") {
+    if (typeof window !== "undefined") {
       console.log(`SettingsManager: 画面幅 ${currentWidth}px`);
       console.log("適用設定:", settings);
 

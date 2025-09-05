@@ -33,10 +33,6 @@ export class ParticleSystem {
     }
 
     // モバイル対応: パーティクル数を制限
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
     const maxParticles = 100000;
     const limitedPositions = positions.slice(0, maxParticles);
 
@@ -58,7 +54,7 @@ export class ParticleSystem {
     console.log(`パーティクル${this.particles.length}個を生成完了`);
   }
 
-  private setupEventListeners(canvas: HTMLCanvasElement): void {
+  private setupEventListeners(_canvas: HTMLCanvasElement): void {
     // タッチデバイス対応: パッシブイベントリスナーを使用
     const options = { passive: true };
 

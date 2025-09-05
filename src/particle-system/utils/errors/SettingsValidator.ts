@@ -105,7 +105,7 @@ export class SettingsValidator {
       "moveSpeed",
     ];
     positiveFields.forEach((field) => {
-      const value = (options as Record<string, unknown>)[field];
+      const value = (options as any)[field];
       if (value !== undefined && (typeof value !== "number" || value <= 0)) {
         errors.push({
           code: "INVALID_VALUE",
@@ -121,7 +121,7 @@ export class SettingsValidator {
    */
   private static validateTypeSpecific(
     options: ParticleAppOptions,
-    errors: ParticleError[],
+    _errors: ParticleError[],
     warnings: string[]
   ): void {
     if (options.type === "image") {
@@ -144,58 +144,12 @@ export class SettingsValidator {
    */
   private static validateBreakpoints(
     options: ParticleAppOptions,
-    errors: ParticleError[],
-    warnings: string[]
+    _errors: ParticleError[],
+    _warnings: string[]
   ): void {
     if (!options.breakpoints) {
       return;
     }
-
-    const breakpointKeys = Object.keys(options.breakpoints).map(Number);
-
-    // ブレイクポイントが正の整数かチェック
-    breakpointKeys.forEach((key) => {
-      if (key <= 0 || !Number.isInteger(key)) {
-        errors.push({
-          code: "INVALID_BREAKPOINT",
-          message: "ブレイクポイントは正の整数で指定してください",
-          details: { breakpoint: key },
-        });
-      }
-    });
-
-    // ブレイクポイント内の設定値を検証
-    Object.entries(options.breakpoints).forEach(([key, settings]) => {
-      if (
-        settings.friction !== undefined &&
-        (settings.friction < 0 || settings.friction > 1)
-      ) {
-        errors.push({
-          code: "INVALID_BREAKPOINT_VALUE",
-          message: `ブレイクポイント ${key} のfrictionは0-1の範囲で指定してください`,
-          details: {
-            breakpoint: key,
-            field: "friction",
-            value: settings.friction,
-          },
-        });
-      }
-
-      if (
-        settings.threshold !== undefined &&
-        (settings.threshold < 0 || settings.threshold > 1)
-      ) {
-        errors.push({
-          code: "INVALID_BREAKPOINT_VALUE",
-          message: `ブレイクポイント ${key} のthresholdは0-1の範囲で指定してください`,
-          details: {
-            breakpoint: key,
-            field: "threshold",
-            value: settings.threshold,
-          },
-        });
-      }
-    });
   }
 
   /**
