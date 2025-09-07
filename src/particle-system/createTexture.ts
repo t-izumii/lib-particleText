@@ -1,5 +1,3 @@
-import type { Position } from "../types/particle-types";
-
 export class TextureGenerator {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -28,7 +26,7 @@ export class TextureGenerator {
     density: number,
     stageWidth: number,
     stageHeight: number
-  ): Position[] {
+  ) {
     this.clearCanvas(stageWidth, stageHeight);
 
     this.ctx.font = fontString;
@@ -49,72 +47,11 @@ export class TextureGenerator {
     return this.dotPos(density, stageWidth, stageHeight);
   }
 
-  setImage(
-    path: string,
-    density: number,
-    stageWidth: number,
-    stageHeight: number,
-    callback: (positions: Position[]) => void
-  ): void {
-    // キャンバスを安全にクリアしてサイズを調整
-    this.clearCanvas(stageWidth, stageHeight);
-
-    const image = new Image();
-    image.src = path;
-
-    image.onload = () => {
-      // 再度キャンバスをクリア（画像読み込み完了後）
-      this.clearCanvas(stageWidth, stageHeight);
-
-      // 画像のアスペクト比を計算
-      const imageAspect = image.width / image.height;
-      const canvasAspect = stageWidth / stageHeight;
-
-      let drawWidth: number;
-      let drawHeight: number;
-      let offsetX: number;
-      let offsetY: number;
-
-      // アスペクト比を保ちながらキャンバスに収まるサイズを計算（contain方式）
-      if (imageAspect > canvasAspect) {
-        // 画像が横長の場合、幅に合わせる
-        drawWidth = stageWidth;
-        drawHeight = stageWidth / imageAspect;
-        offsetX = 0;
-        offsetY = (stageHeight - drawHeight) / 2;
-      } else {
-        // 画像が縦長の場合、高さに合わせる
-        drawHeight = stageHeight;
-        drawWidth = stageHeight * imageAspect;
-        offsetX = (stageWidth - drawWidth) / 2;
-        offsetY = 0;
-      }
-
-      // アスペクト比を保ちながら中央に配置して描画
-      this.ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
-
-      // 画像描画後に座標抽出
-      const positions = this.dotPos(density, stageWidth, stageHeight);
-      callback(positions);
-    };
-
-    // エラーハンドリングも追加
-    image.onerror = () => {
-      console.error(`Failed to load image: ${path}`);
-      callback([]); // 空の配列を返してエラーを防ぐ
-    };
-  }
-
-  private dotPos(
-    density: number,
-    stageWidth: number,
-    stageHeight: number
-  ): Position[] {
+  private dotPos(density: number, stageWidth: number, stageHeight: number) {
     // キャンバス全体のピクセルデータを取得
     const imageData = this.ctx.getImageData(0, 0, stageWidth, stageHeight).data;
 
-
-    const particles: Position[] = [];
+    const particles = [];
     let i = 0; // 行カウンター
     let width = 0; // 現在のX座標
     let pixel: number; // 現在のピクセルのアルファ値
