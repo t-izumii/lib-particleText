@@ -1,15 +1,18 @@
-import * as PIXI from "pixi.js";
 import { PixiApp } from "./particle-system/setUpPixi";
 import { ParticleSystem } from "./particle-system/index";
-import { MouseInteraction } from "./mouseEvent/MouseInteraction";
-import { mouseState } from "./lib/mouseState";
 import { FilterManager } from "./filter/blurFilter";
 
 async function init() {
   const app = new PixiApp(".js-ParticleText");
   const pixiApp = app.getApp();
 
-  let particleSystem = new ParticleSystem(pixiApp);
+  const particleSystem = new ParticleSystem(pixiApp, {
+    text: "test",
+    font: "200px Arial",
+    density: 4,
+    scale: 0.08,
+    tint: 0x0000ff,
+  });
 
   // stageにフィルターを適用
   pixiApp.stage.filters = [

@@ -27,9 +27,8 @@ export class FilterManager {
     uniform float mb;
     void main(void) {
       vec4 color = texture2D(uSampler, vTextureCoord);
-      vec3 mcolor = vec3(mr, mg, mb);
       if (color.a > threshold) {
-        gl_FragColor = vec4(mcolor, 1.0);
+        gl_FragColor = vec4(color.r, color.g, color.b, 1.0);
       } else {
         gl_FragColor = vec4(vec3(0.0), 0.0);
       }
@@ -39,9 +38,6 @@ export class FilterManager {
     // シェーダーに渡すユニフォーム変数
     const uniformData = {
       threshold: 0.5,
-      mr: 0.0,
-      mg: 0.0,
-      mb: 0.0,
     };
 
     // カスタムフィルターを作成

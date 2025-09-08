@@ -5,13 +5,13 @@ class Particle {
   public sprite: PIXI.Sprite;
   public data: ParticleData;
 
-  constructor(position: { x: number; y: number }, texture: PIXI.Texture) {
+  constructor(position: { x: number; y: number }, texture: PIXI.Texture, options?: any) {
     this.sprite = new PIXI.Sprite(texture);
     this.sprite.x = position.x;
     this.sprite.y = position.y;
-    this.sprite.anchor.set(0.5);
-    this.sprite.scale.set(0.1);
-    this.sprite.tint = 0x000000; // 黒色に変更
+    this.sprite.anchor.set(options?.anchor || 0.5);
+    this.sprite.scale.set(options?.scale || 0.1);
+    this.sprite.tint = options?.tint || 0x000000;
 
     // パーティクルデータを初期化
     this.data = {
@@ -35,12 +35,14 @@ class Particle {
 
 export class createParticle {
   private particles: Particle[] = [];
-  private container?: PIXI.ParticleContainer; // ParticleContainerからContainerに変更
+  private container?: PIXI.ParticleContainer;
   private texture: PIXI.Texture;
   private canvas?: HTMLCanvasElement;
+  private options: any;
 
-  constructor(texture: PIXI.Texture, canvas?: HTMLCanvasElement) {
+  constructor(texture: PIXI.Texture, options?: any, canvas?: HTMLCanvasElement) {
     this.texture = texture;
+    this.options = options || {};
     this.canvas = canvas;
   }
 
@@ -59,7 +61,7 @@ export class createParticle {
     this.container = new PIXI.ParticleContainer(); // ParticleContainerからContainerに変更
 
     for (const position of limitedPositions) {
-      const particle = new Particle(position, this.texture);
+      const particle = new Particle(position, this.texture, this.options);
       this.particles.push(particle);
       this.container.addChild(particle.sprite);
     }
