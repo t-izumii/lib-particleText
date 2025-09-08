@@ -15,9 +15,7 @@ async function init() {
     mouseRadius: 10,
     breakpoints: {
       768: {
-        font: "150px Arial",
-        scale: 0.06,
-        density: 6,
+        font: "100px Arial",
       },
     },
   });

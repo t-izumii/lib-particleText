@@ -84,4 +84,17 @@ export class createParticle {
       particle.updatePosition();
     });
   }
+
+  /**
+   * オプションを更新
+   */
+  updateOptions(options: any): void {
+    this.options = options;
+    // 既存のパーティクルの見た目を更新
+    this.particles.forEach((particle) => {
+      particle.sprite.anchor.set(options?.anchor || 0.5);
+      particle.sprite.scale.set(options?.scale || 0.1);
+      particle.sprite.tint = options?.tint || 0x000000;
+    });
+  }
 }
