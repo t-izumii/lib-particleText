@@ -1,6 +1,8 @@
 import * as PIXI from "pixi.js";
 import { TextureGenerator } from "./createTexture";
 import { createParticle } from "./createParticle";
+import { MouseInteraction } from "../mouseEvent/MouseInteraction";
+import { mouseState } from "../lib/mouseState";
 
 export interface ParticleSystemOptions {
   text: string;
@@ -15,10 +17,19 @@ export class ParticleSystem {
   private createParticle!: createParticle;
   private particleTexture?: PIXI.Texture;
   private pixiApp: PIXI.Application;
+  private mouseInteraction: MouseInteraction;
 
   constructor(pixiApp: PIXI.Application) {
     this.textureGenerator = new TextureGenerator();
     this.pixiApp = pixiApp;
+    
+    // マウスインタラクションを初期化
+    this.mouseInteraction = new MouseInteraction(
+      120, // 反発半径
+      0.8, // 反発力
+      0.03, // 復帰力
+      0.92 // 摩擦
+    );
 
     this.init();
   }
@@ -44,6 +55,7 @@ export class ParticleSystem {
     this.createParticle.createParticles(particles, this.pixiApp.stage);
 
     this.setEventListener();
+    this.startAnimation();
   }
 
   setEventListener() {
@@ -70,5 +82,27 @@ export class ParticleSystem {
 
     const particles = this.textureGenerator.resize(newWidth, newHeight);
     this.createParticle.createParticles(particles, this.pixiApp.stage);
+  }
+
+  /**
+   * アニメーションループを開始
+   */
+  private startAnimation(): void {
+    this.pixiApp.ticker.add(() => {
+      // グローバルマウス座標を取得してキャンバス相対座標に変換
+      const canvas = this.pixiApp.view as HTMLCanvasElement;
+      const relativePos = mouseState.getRelativePosition(canvas);
+
+      // マウスインタラクションを適用
+      this.mouseInteraction.updateMousePosition(relativePos.x, relativePos.y);
+      const createParticleInstance = this.getCreateParticle();
+      if (createParticleInstance) {
+        this.mouseInteraction.applyMouseInteraction(
+          createParticleInstance.getParticleData()
+        );
+        // パーティクル位置を更新
+        createParticleInstance.updateParticles();
+      }
+    });
   }
 }
