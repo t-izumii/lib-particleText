@@ -12,6 +12,14 @@ async function init() {
     density: 4,
     scale: 0.08,
     tint: 0x0000ff,
+    mouseRadius: 10,
+    breakpoints: {
+      768: {
+        font: "150px Arial",
+        scale: 0.06,
+        density: 6,
+      },
+    },
   });
 
   // stageにフィルターを適用

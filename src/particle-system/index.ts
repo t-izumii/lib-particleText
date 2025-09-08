@@ -12,6 +12,13 @@ export interface ParticleSystemOptions {
   anchor?: number;
   scale?: number;
   tint?: number;
+  mouseRadius?: number;
+  mouseForce?: number;
+  returnForce?: number;
+  friction?: number;
+  breakpoints?: {
+    [width: number]: Partial<ParticleSystemOptions>;
+  };
 }
 
 export class ParticleSystem {
@@ -25,25 +32,28 @@ export class ParticleSystem {
   constructor(pixiApp: PIXI.Application, options: ParticleSystemOptions = {}) {
     this.textureGenerator = new TextureGenerator();
     this.pixiApp = pixiApp;
-    
     // デフォルト設定とユーザー設定をマージ
     this.options = {
       text: "HELLO",
-      font: "150px Arial",
-      density: 8,
+      font: "100px Arial",
+      density: 4,
       enableFilter: false,
       anchor: 0.5,
       scale: 0.1,
       tint: 0x000000,
-      ...options
+      mouseRadius: 120,
+      mouseForce: 0.8,
+      returnForce: 0.03,
+      friction: 0.92,
+      ...options,
     };
-    
+
     // マウスインタラクションを初期化
     this.mouseInteraction = new MouseInteraction(
-      120, // 反発半径
-      0.8, // 反発力
-      0.03, // 復帰力
-      0.92 // 摩擦
+      this.options.mouseRadius!, // 反発半径
+      this.options.mouseForce!, // 反発力
+      this.options.returnForce!, // 復帰力
+      this.options.friction! // 摩擦
     );
 
     this.init();
@@ -66,7 +76,10 @@ export class ParticleSystem {
     );
 
     // ParticleSystemを初期化してパーティクルを描画
-    this.createParticle = new createParticle(this.particleTexture, this.options);
+    this.createParticle = new createParticle(
+      this.particleTexture,
+      this.options
+    );
     this.createParticle.createParticles(particles, this.pixiApp.stage);
 
     this.setEventListener();
