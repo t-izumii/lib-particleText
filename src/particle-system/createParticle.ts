@@ -82,18 +82,4 @@ export class createParticle {
       particle.updatePosition();
     });
   }
-
-  /**
-   * コンテナーを取得（フィルター適用用）
-   */
-  getContainer(): PIXI.Container | undefined {
-    return this.container;
-  }
-
-  /**
-   * パーティクル数を取得
-   */
-  getParticleCount(): number {
-    return this.particles.length;
-  }
 }

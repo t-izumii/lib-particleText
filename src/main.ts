@@ -9,7 +9,14 @@ async function init() {
   const app = new PixiApp(".js-ParticleText");
   const pixiApp = app.getApp();
 
-  const particleSystem = new ParticleSystem(pixiApp);
+  let particleSystem = new ParticleSystem(pixiApp);
+
+  // stageにフィルターを適用（study-10と同じ方法）
+  pixiApp.stage.filters = [
+    new FilterManager().getBlurFilter(),
+    new FilterManager().getThresholdFilter(),
+  ];
+  pixiApp.stage.filterArea = pixiApp.renderer.screen;
 
   // マウスインタラクションを初期化
   const mouseInteraction = new MouseInteraction(
@@ -32,6 +39,7 @@ async function init() {
       mouseInteraction.applyMouseInteraction(
         createParticleInstance.getParticleData()
       );
+      // パーティクル位置を更新
       createParticleInstance.updateParticles();
     }
   });

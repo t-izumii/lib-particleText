@@ -1,10 +1,20 @@
 export class TextureGenerator {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
+  private str!: string;
+  private fontString!: string;
+  private density!: number;
+  private stageWidth!: number;
+  private stageHeight!: number;
 
   constructor() {
     this.canvas = document.createElement("canvas");
     this.ctx = this.canvas.getContext("2d", { willReadFrequently: true })!;
+    this.str;
+    this.fontString;
+    this.density;
+    this.stageWidth;
+    this.stageHeight;
   }
 
   private clearCanvas(width: number, height: number): void {
@@ -27,24 +37,30 @@ export class TextureGenerator {
     stageWidth: number,
     stageHeight: number
   ) {
-    this.clearCanvas(stageWidth, stageHeight);
+    this.str = str;
+    this.fontString = fontString;
+    this.density = density;
+    this.stageWidth = stageWidth;
+    this.stageHeight = stageHeight;
 
-    this.ctx.font = fontString;
+    this.clearCanvas(this.stageWidth, this.stageHeight);
+
+    this.ctx.font = this.fontString;
     this.ctx.fillStyle = `rgba(0,0,0,1.0)`;
     this.ctx.textBaseline = "middle";
 
     // テキストの描画位置を計算（画面中央に配置）
-    const fontPos = this.ctx.measureText(str);
+    const fontPos = this.ctx.measureText(this.str);
 
     // テキストを描画
     this.ctx.fillText(
-      str,
-      (stageWidth - fontPos.width) / 2, // 水平中央
-      stageHeight / 2 // 垂直中央（シンプル）
+      this.str,
+      (this.stageWidth - fontPos.width) / 2, // 水平中央
+      this.stageHeight / 2 // 垂直中央（シンプル）
     );
 
     // 描画されたテキストからパーティクル座標を抽出
-    return this.dotPos(density, stageWidth, stageHeight);
+    return this.dotPos(this.density, this.stageWidth, this.stageHeight);
   }
 
   private dotPos(density: number, stageWidth: number, stageHeight: number) {
@@ -90,5 +106,18 @@ export class TextureGenerator {
     }
 
     return particles;
+  }
+
+  resize(newWidth: number, newHeight: number) {
+    this.stageWidth = newWidth;
+    this.stageHeight = newHeight;
+
+    return this.setTextWithFont(
+      this.str,
+      this.fontString,
+      this.density,
+      this.stageWidth,
+      this.stageHeight
+    );
   }
 }

@@ -20,7 +20,6 @@ export class ParticleSystem {
     this.textureGenerator = new TextureGenerator();
     this.pixiApp = pixiApp;
 
-    // 自動的に初期化を開始
     this.init();
   }
 
@@ -43,7 +42,14 @@ export class ParticleSystem {
     // ParticleSystemを初期化してパーティクルを描画
     this.createParticle = new createParticle(this.particleTexture);
     this.createParticle.createParticles(particles, this.pixiApp.stage);
+
+    this.setEventListener();
   }
+
+  setEventListener() {
+    window.addEventListener("resize", this.resize.bind(this));
+  }
+
   /**
    * パーティクルシステムを取得
    */
@@ -56,5 +62,13 @@ export class ParticleSystem {
    */
   getTextureGenerator(): TextureGenerator {
     return this.textureGenerator;
+  }
+
+  resize() {
+    const newWidth = this.pixiApp.screen.width;
+    const newHeight = this.pixiApp.screen.height;
+
+    const particles = this.textureGenerator.resize(newWidth, newHeight);
+    this.createParticle.createParticles(particles, this.pixiApp.stage);
   }
 }
