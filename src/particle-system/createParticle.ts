@@ -5,12 +5,16 @@ class Particle {
   public sprite: PIXI.Sprite;
   public data: ParticleData;
 
-  constructor(position: { x: number; y: number }, texture: PIXI.Texture, options?: any) {
+  constructor(
+    position: { x: number; y: number },
+    texture: PIXI.Texture,
+    options?: any
+  ) {
     this.sprite = new PIXI.Sprite(texture);
     this.sprite.x = position.x;
     this.sprite.y = position.y;
     this.sprite.anchor.set(options?.anchor || 0.5);
-    this.sprite.scale.set(options?.scale || 0.1);
+    this.sprite.scale.set(options?.scale / 10 || 0.1);
     this.sprite.tint = options?.tint || 0x000000;
 
     // パーティクルデータを初期化
@@ -40,7 +44,11 @@ export class createParticle {
   private canvas?: HTMLCanvasElement;
   private options: any;
 
-  constructor(texture: PIXI.Texture, options?: any, canvas?: HTMLCanvasElement) {
+  constructor(
+    texture: PIXI.Texture,
+    options?: any,
+    canvas?: HTMLCanvasElement
+  ) {
     this.texture = texture;
     this.options = options || {};
     this.canvas = canvas;

@@ -10,7 +10,7 @@ async function init() {
     text: "test",
     font: "200px Arial",
     density: 4,
-    scale: 0.08,
+    scale: 2,
     tint: 0x0000ff,
     mouseRadius: 10,
     breakpoints: {
