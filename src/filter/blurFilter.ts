@@ -14,7 +14,7 @@ export class FilterManager {
   private setupFilters() {
     // ブラーフィルターの設定
     this.blurFilter = new PIXI.BlurFilter();
-    this.blurFilter.blur = 10;
+    this.blurFilter.blur = 0;
     this.blurFilter.autoFit = true;
 
     const fragSource = `

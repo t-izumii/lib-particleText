@@ -10,9 +10,8 @@ class Particle {
     this.sprite.x = position.x;
     this.sprite.y = position.y;
     this.sprite.anchor.set(0.5);
-    this.sprite.scale.set(0.5);
+    this.sprite.scale.set(0.1);
     this.sprite.tint = 0x000000; // 黒色に変更
-    this.sprite.scale.set(0.2); // サイズを大きくしてブラーを確認しやすく
 
     // パーティクルデータを初期化
     this.data = {
@@ -34,7 +33,7 @@ class Particle {
   }
 }
 
-export class ParticleSystem {
+export class createParticle {
   private particles: Particle[] = [];
   private container?: PIXI.ParticleContainer; // ParticleContainerからContainerに変更
   private texture: PIXI.Texture;
