@@ -4,9 +4,15 @@ import { createParticle } from "./createParticle";
 import { MouseInteraction } from "../mouseEvent/MouseInteraction";
 import { mouseState } from "../lib/mouseState";
 
+export interface FontOptions {
+  size?: string;
+  family?: string;
+  weight?: string | number;
+}
+
 export interface ParticleSystemOptions {
   text?: string;
-  font?: string;
+  font?: FontOptions;
   density?: number;
   enableFilter?: boolean;
   anchor?: number;
@@ -36,7 +42,11 @@ export class ParticleSystem {
     // デフォルト設定とユーザー設定をマージ
     this.baseOptions = {
       text: "HELLO",
-      font: "100px Arial",
+      font: {
+        size: "100px",
+        family: "Arial",
+        weight: "normal"
+      },
       density: 4,
       enableFilter: false,
       anchor: 0.5,
@@ -64,6 +74,16 @@ export class ParticleSystem {
   }
 
   /**
+   * fontオブジェクトを文字列に変換
+   */
+  private fontToString(font: FontOptions): string {
+    const weight = font.weight || "normal";
+    const size = font.size || "100px";
+    const family = font.family || "Arial";
+    return `${weight} ${size} ${family}`;
+  }
+
+  /**
    * パーティクルテキストシステムを初期化
    */
   private async init(): Promise<void> {
@@ -73,7 +93,7 @@ export class ParticleSystem {
     // テキストからパーティクル座標を生成
     const particles = this.textureGenerator.setTextWithFont(
       this.options.text!, // テキスト
-      this.options.font!, // フォント
+      this.fontToString(this.options.font!), // フォント
       this.options.density!, // 密度
       this.pixiApp.screen.width, // ステージ幅
       this.pixiApp.screen.height // ステージ高さ
@@ -118,7 +138,7 @@ export class ParticleSystem {
     // 新しい設定でテキストからパーティクル座標を再生成
     const particles = this.textureGenerator.setTextWithFont(
       this.options.text!,
-      this.options.font!,
+      this.fontToString(this.options.font!),
       this.options.density!,
       newWidth,
       newHeight

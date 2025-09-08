@@ -8,14 +8,20 @@ async function init() {
 
   const particleSystem = new ParticleSystem(pixiApp, {
     text: "test",
-    font: "200px Arial",
+    font: {
+      size: "200px",
+      family: "Arial",
+      weight: 400, // 数値で指定する場合
+    },
     density: 4,
     scale: 2,
     tint: 0x0000ff,
-    mouseRadius: 10,
+    mouseRadius: 100,
     breakpoints: {
       768: {
-        font: "100px Arial",
+        font: {
+          size: "100px",
+        },
       },
     },
   });
