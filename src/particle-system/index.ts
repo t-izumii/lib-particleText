@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
-import { ParticlePositionsGenerator } from "./ParticlePositionsGenerator";
+// import { ParticlePositionsGenerator } from "./ParticlePositionsGenerator";
+import { TextureGenerator } from "./TextureGenerator";
 import { ParticleManager } from "./ParticleManager";
 import { MouseInteraction } from "./MouseInteraction";
 import { mouseState } from "../lib/MouseState";
@@ -28,7 +29,7 @@ export interface ParticleSystemOptions {
 }
 
 export class ParticleSystem {
-  private textureGenerator: ParticlePositionsGenerator;
+  private textureGenerator: TextureGenerator;
   private particleManager!: ParticleManager;
   private particleTexture?: PIXI.Texture;
   private pixiApp: PIXI.Application;
@@ -37,7 +38,7 @@ export class ParticleSystem {
   private baseOptions: ParticleSystemOptions;
 
   constructor(pixiApp: PIXI.Application, options: ParticleSystemOptions = {}) {
-    this.textureGenerator = new ParticlePositionsGenerator();
+    this.textureGenerator = new TextureGenerator();
     this.pixiApp = pixiApp;
     // デフォルト設定とユーザー設定をマージ
     this.baseOptions = {
@@ -91,7 +92,7 @@ export class ParticleSystem {
     this.particleTexture = await PIXI.Assets.load("./particle.png");
 
     // テキストからパーティクル座標を生成
-    const particles = this.textureGenerator.generateParticlePositions(
+    const particles = this.textureGenerator.generateTextCtx(
       this.options.text!, // テキスト
       this.fontToString(this.options.font!), // フォント
       this.options.density!, // 密度
@@ -124,7 +125,7 @@ export class ParticleSystem {
   /**
    * テクスチャジェネレーターを取得
    */
-  getTextureGenerator(): ParticlePositionsGenerator {
+  getTextureGenerator(): TextureGenerator {
     return this.textureGenerator;
   }
 
@@ -136,7 +137,7 @@ export class ParticleSystem {
     this.options = this.getResponsiveOptions();
 
     // 新しい設定でテキストからパーティクル座標を再生成
-    const particles = this.textureGenerator.generateParticlePositions(
+    const particles = this.textureGenerator.generateTextCtx(
       this.options.text!,
       this.fontToString(this.options.font!),
       this.options.density!,

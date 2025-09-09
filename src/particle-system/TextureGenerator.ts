@@ -32,7 +32,7 @@ export class TextureGenerator {
     this.ctx.globalAlpha = 1;
   }
 
-  generateCtx(
+  generateTextCtx(
     str: string,
     fontString: string,
     density: number,
@@ -73,7 +73,7 @@ export class TextureGenerator {
     this.stageWidth = newWidth;
     this.stageHeight = newHeight;
 
-    return this.generateCtx(
+    return this.generateTextCtx(
       this.str,
       this.fontString,
       this.density,
