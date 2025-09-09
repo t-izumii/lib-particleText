@@ -1,6 +1,6 @@
 import { PixiApp } from "./particle-system/setUpPixi";
 import { ParticleSystem } from "./particle-system/index";
-import { FilterManager } from "./filter/blurFilter";
+import { MetaballFilter } from "./filter/metaballFilter";
 import { GoogleFontsLoader } from "./lib/fontloader";
 
 async function init() {
@@ -36,8 +36,8 @@ async function init() {
     },
   });
 
-  // FilterManagerでbreakpointsとフィルター適用を完全管理
-  const filterManager = new FilterManager({
+  // MetaballFilterでbreakpointsとフィルター適用を完全管理
+  const filterManager = new MetaballFilter(pixiApp, {
     blur: 3, // デスクトップのデフォルト値
     threshold: 0.7, // デスクトップのデフォルト値
     breakpoints: {
@@ -47,9 +47,6 @@ async function init() {
       },
     },
   });
-
-  // 初期化：FilterManagerが自動でフィルター適用とリサイズ対応を管理
-  filterManager.init(pixiApp);
 }
 
 init();

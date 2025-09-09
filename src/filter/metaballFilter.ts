@@ -8,14 +8,16 @@ export interface MetaballFilterOptions {
   };
 }
 
-export class FilterManager {
+export class MetaballFilter {
   private blurFilter!: PIXI.BlurFilter;
   private thresholdFilter!: PIXI.Filter;
   private baseOptions: MetaballFilterOptions;
   private currentOptions: MetaballFilterOptions;
-  private pixiApp?: PIXI.Application;
+  private pixiApp: PIXI.Application;
 
-  constructor(options: MetaballFilterOptions = {}) {
+  constructor(pixiApp: PIXI.Application, options: MetaballFilterOptions = {}) {
+    this.pixiApp = pixiApp;
+
     // デフォルト設定とユーザー設定をマージ
     this.baseOptions = {
       blur: 2,
@@ -26,16 +28,11 @@ export class FilterManager {
     // 現在の画面幅に応じた設定を適用
     this.currentOptions = this.getResponsiveOptions();
 
+    // 初期フィルター適用
+    this.applyFilters();
+
     // リサイズイベントリスナーを設定
     this.setEventListener();
-  }
-
-  /**
-   * PIXIアプリケーションを初期化してフィルターを適用
-   */
-  init(pixiApp: PIXI.Application): void {
-    this.pixiApp = pixiApp;
-    this.applyFilters();
   }
 
   /**
@@ -154,12 +151,5 @@ export class FilterManager {
     const thresholdFilter = this.setThresholdFilter(threshold);
 
     return [blurFilter, thresholdFilter];
-  }
-
-  /**
-   * 現在のオプションを取得
-   */
-  getCurrentOptions(): MetaballFilterOptions {
-    return this.currentOptions;
   }
 }
