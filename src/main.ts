@@ -36,12 +36,20 @@ async function init() {
     },
   });
 
-  // stageにフィルターを適用
-  pixiApp.stage.filters = [
-    new FilterManager().getBlurFilter(1),
-    new FilterManager().getThresholdFilter(0.5),
-  ];
-  pixiApp.stage.filterArea = pixiApp.renderer.screen;
+  // FilterManagerでbreakpointsとフィルター適用を完全管理
+  const filterManager = new FilterManager({
+    blur: 3, // デスクトップのデフォルト値
+    threshold: 0.7, // デスクトップのデフォルト値
+    breakpoints: {
+      768: {
+        blur: 0, // 768px以下の時の値
+        threshold: 0.3, // 768px以下の時の値
+      },
+    },
+  });
+
+  // 初期化：FilterManagerが自動でフィルター適用とリサイズ対応を管理
+  filterManager.init(pixiApp);
 }
 
 init();
