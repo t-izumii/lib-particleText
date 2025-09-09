@@ -1,3 +1,5 @@
+import { PARTICLE_CONSTANTS } from "./constants";
+
 export class ParticlePositionExtractor {
   private ctx: CanvasRenderingContext2D;
   private density!: number;
@@ -45,13 +47,13 @@ export class ParticlePositionExtractor {
       width = 0;
 
       if (slide) {
-        width += 6; // 偶数行は6ピクセル右にずらす
+        width += PARTICLE_CONSTANTS.HEX_GRID_OFFSET; // 偶数行をオフセット
       }
 
       // X軸方向にdensity間隔でスキャン
       for (width; width < this.stageWidth; width += this.density) {
-        // ピクセルのアルファ値を取得（RGBA形式の4番目の要素）
-        pixel = imageData[(width + height * this.stageWidth) * 4 + 3];
+        // ピクセルのアルファ値を取得（RGBA形式のアルファ要素）
+        pixel = imageData[(width + height * this.stageWidth) * 4 + PARTICLE_CONSTANTS.CANVAS_RGBA_ALPHA_INDEX];
 
         // アルファ値が0でない（透明でない）かつ画面内の場合、座標を追加
         if (

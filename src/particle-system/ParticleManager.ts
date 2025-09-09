@@ -1,5 +1,12 @@
 import * as PIXI from "pixi.js";
 import type { ParticleData } from "./MouseInteraction";
+import { PARTICLE_CONSTANTS, DEFAULT_PARTICLE_OPTIONS } from "./constants";
+
+export interface ParticleOptions {
+  anchor?: number;
+  scale?: number;
+  tint?: number;
+}
 
 class Particle {
   public sprite: PIXI.Sprite;
@@ -8,14 +15,14 @@ class Particle {
   constructor(
     position: { x: number; y: number },
     texture: PIXI.Texture,
-    options?: any
+    options?: ParticleOptions
   ) {
     this.sprite = new PIXI.Sprite(texture);
     this.sprite.x = position.x;
     this.sprite.y = position.y;
-    this.sprite.anchor.set(options?.anchor || 0.5);
-    this.sprite.scale.set(options?.scale / 10 || 0.1);
-    this.sprite.tint = options?.tint || 0x000000;
+    this.sprite.anchor.set(options?.anchor ?? DEFAULT_PARTICLE_OPTIONS.anchor);
+    this.sprite.scale.set((options?.scale ?? DEFAULT_PARTICLE_OPTIONS.scale) / PARTICLE_CONSTANTS.SCALE_DIVISOR);
+    this.sprite.tint = options?.tint ?? DEFAULT_PARTICLE_OPTIONS.tint;
 
     // パーティクルデータを初期化
     this.data = {
@@ -41,17 +48,14 @@ export class ParticleManager {
   private particles: Particle[] = [];
   private container?: PIXI.ParticleContainer;
   private texture: PIXI.Texture;
-  private canvas?: HTMLCanvasElement;
-  private options: any;
+  private options: ParticleOptions;
 
   constructor(
     texture: PIXI.Texture,
-    options?: any,
-    canvas?: HTMLCanvasElement
+    options: ParticleOptions = {}
   ) {
     this.texture = texture;
-    this.options = options || {};
-    this.canvas = canvas;
+    this.options = options;
   }
 
   renderParticles(
@@ -63,12 +67,10 @@ export class ParticleManager {
       return;
     }
 
-    if (this.container) {
-      this.container.destroy();
-      this.particles = [];
-    }
+    // 既存のリソースを適切にクリーンアップ
+    this.cleanup();
 
-    const maxParticles = 100000;
+    const maxParticles = PARTICLE_CONSTANTS.MAX_PARTICLES;
     const limitedPositions = positions.slice(0, maxParticles);
 
     this.container = new PIXI.ParticleContainer(maxParticles);
@@ -101,13 +103,50 @@ export class ParticleManager {
   /**
    * オプションを更新
    */
-  updateOptions(options: any): void {
-    this.options = options;
+  updateOptions(options: ParticleOptions): void {
+    this.options = { ...this.options, ...options };
     // 既存のパーティクルの見た目を更新
     this.particles.forEach((particle) => {
-      particle.sprite.anchor.set(options?.anchor || 0.5);
-      particle.sprite.scale.set(options?.scale || 0.1);
-      particle.sprite.tint = options?.tint || 0x000000;
+      particle.sprite.anchor.set(this.options.anchor ?? DEFAULT_PARTICLE_OPTIONS.anchor);
+      particle.sprite.scale.set(this.options.scale ?? DEFAULT_PARTICLE_OPTIONS.scale);
+      particle.sprite.tint = this.options.tint ?? DEFAULT_PARTICLE_OPTIONS.tint;
     });
+  }
+
+  /**
+   * リソースをクリーンアップ
+   */
+  cleanup(): void {
+    if (this.container) {
+      // 各パーティクルのテクスチャを適切に破棄
+      this.particles.forEach(particle => {
+        if (particle.sprite.texture && particle.sprite.texture.baseTexture) {
+          // カスタムテクスチャの場合のみ破棄（共有テクスチャは破棄しない）
+          if (particle.sprite.texture !== this.texture) {
+            particle.sprite.texture.destroy();
+          }
+        }
+        particle.sprite.destroy();
+      });
+      
+      this.container.destroy({
+        children: true,
+        texture: false, // 共有テクスチャは保持
+        baseTexture: false
+      });
+      this.container = undefined;
+      this.particles = [];
+    }
+  }
+
+  /**
+   * 完全なリソース破棄（コンポーネント終了時用）
+   */
+  destroy(): void {
+    this.cleanup();
+    // メインテクスチャも破棄する場合（使用時は注意）
+    // if (this.texture && !this.texture.baseTexture.destroyed) {
+    //   this.texture.destroy();
+    // }
   }
 }

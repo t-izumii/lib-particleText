@@ -15,18 +15,16 @@ export interface ParticleData {
 
 export class MouseInteraction {
   private mousePosition: MousePosition = { x: 0, y: 0, radius: 100 };
-  private repelForce: number;
   private returnForce: number;
   private friction: number;
 
   constructor(
     repelRadius: number = 100,
-    repelForce: number = 0.5,
+    _repelForce: number = 0.5,
     returnForce: number = 0.02,
     friction: number = 0.95
   ) {
     this.mousePosition.radius = repelRadius;
-    this.repelForce = repelForce;
     this.returnForce = returnForce;
     this.friction = friction;
   }
@@ -129,8 +127,7 @@ export class MouseInteraction {
   }): void {
     if (settings.repelRadius !== undefined)
       this.mousePosition.radius = settings.repelRadius;
-    if (settings.repelForce !== undefined)
-      this.repelForce = settings.repelForce;
+    // repelForce は現在使用されていない
     if (settings.returnForce !== undefined)
       this.returnForce = settings.returnForce;
     if (settings.friction !== undefined) this.friction = settings.friction;

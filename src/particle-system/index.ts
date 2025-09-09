@@ -2,7 +2,9 @@ import * as PIXI from "pixi.js";
 import { TextureGenerator } from "./TextureGenerator";
 import { ParticleManager } from "./ParticleManager";
 import { MouseInteraction } from "./MouseInteraction";
-import { mouseState } from "../lib/MouseState";
+import { mouseState } from "../lib/mouseState";
+import { PARTICLE_CONSTANTS } from "./constants";
+import { getResponsiveOptions, type ResponsiveOptions } from "./utils";
 
 export interface FontOptions {
   size?: string;
@@ -10,7 +12,7 @@ export interface FontOptions {
   weight?: string | number;
 }
 
-export interface ParticleSystemOptions {
+export interface ParticleSystemOptions extends ResponsiveOptions {
   text?: string;
   imageSrc?: string;
   imgWidth?: number;
@@ -62,7 +64,7 @@ export class ParticleSystem {
     };
 
     // 現在の画面幅に応じた設定を適用
-    this.options = this.getResponsiveOptions();
+    this.options = getResponsiveOptions(this.baseOptions);
 
     // マウスインタラクションを初期化
     this.mouseInteraction = new MouseInteraction(
@@ -89,8 +91,18 @@ export class ParticleSystem {
    * パーティクルテキストシステムを初期化
    */
   private async init(): Promise<void> {
-    // パーティクル画像を読み込み（固定パス）
-    this.particleTexture = await PIXI.Assets.load("./particle.png");
+    try {
+      // パーティクル画像を読み込み（固定パス）
+      this.particleTexture = await PIXI.Assets.load("./particle.png");
+    } catch (error) {
+      console.error("Failed to load particle texture:", error);
+      // フォールバック: 単色の矩形テクスチャを作成
+      const graphics = new PIXI.Graphics();
+      graphics.beginFill(0x000000);
+      graphics.drawRect(0, 0, PARTICLE_CONSTANTS.DEFAULT_PARTICLE_SIZE, PARTICLE_CONSTANTS.DEFAULT_PARTICLE_SIZE);
+      graphics.endFill();
+      this.particleTexture = this.pixiApp.renderer.generateTexture(graphics);
+    }
 
     let particles: { x: number; y: number }[];
 
@@ -131,6 +143,15 @@ export class ParticleSystem {
   }
 
   /**
+   * リサイズ時のクリーンアップ処理
+   */
+  private cleanupBeforeResize(): void {
+    if (this.particleManager) {
+      this.particleManager.cleanup();
+    }
+  }
+
+  /**
    * パーティクルシステムを取得
    */
   getParticleManager(): ParticleManager {
@@ -148,8 +169,11 @@ export class ParticleSystem {
     const newWidth = this.pixiApp.screen.width;
     const newHeight = this.pixiApp.screen.height;
 
+    // リサイズ前にクリーンアップ
+    this.cleanupBeforeResize();
+
     // breakpoint設定を再適用
-    this.options = this.getResponsiveOptions();
+    this.options = getResponsiveOptions(this.baseOptions);
 
     // テキストまたは画像からパーティクル座標を再生成
     let particles: { x: number; y: number }[] | Promise<{ x: number; y: number }[]>;
@@ -192,32 +216,6 @@ export class ParticleSystem {
     });
   }
 
-  /**
-   * 現在の画面幅に応じた設定を取得
-   */
-  private getResponsiveOptions(): ParticleSystemOptions {
-    const currentWidth = window.innerWidth;
-    let responsiveOptions = { ...this.baseOptions };
-
-    if (this.baseOptions.breakpoints) {
-      // breakpointsを幅の昇順でソート
-      const sortedBreakpoints = Object.keys(this.baseOptions.breakpoints)
-        .map(Number)
-        .sort((a, b) => a - b);
-
-      // 現在の幅以下の最大のbreakpointを見つける
-      for (const breakpoint of sortedBreakpoints) {
-        if (currentWidth <= breakpoint) {
-          responsiveOptions = {
-            ...responsiveOptions,
-            ...this.baseOptions.breakpoints[breakpoint],
-          };
-          break; // 最初に条件に合うbreakpointを適用して終了
-        }
-      }
-    }
-    return responsiveOptions;
-  }
 
   /**
    * アニメーションループを開始
@@ -239,5 +237,43 @@ export class ParticleSystem {
         particleManagerInstance.updateParticlePositions();
       }
     });
+  }
+
+  /**
+   * リソースをクリーンアップ
+   */
+  cleanup(): void {
+    // イベントリスナーを削除
+    window.removeEventListener("resize", this.resize.bind(this));
+    
+    // パーティクルマネージャーをクリーンアップ
+    if (this.particleManager) {
+      this.particleManager.cleanup();
+    }
+    
+    // PIXIアプリケーションのティッカーを停止
+    if (this.pixiApp && this.pixiApp.ticker) {
+      this.pixiApp.ticker.stop();
+    }
+  }
+
+  /**
+   * 完全な破棄（コンポーネント終了時用）
+   */
+  destroy(): void {
+    this.cleanup();
+    
+    if (this.particleManager) {
+      this.particleManager.destroy();
+    }
+    
+    // PIXIアプリケーションを破棄
+    if (this.pixiApp) {
+      this.pixiApp.destroy(true, {
+        children: true,
+        texture: true,
+        baseTexture: true
+      });
+    }
   }
 }

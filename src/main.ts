@@ -1,7 +1,7 @@
 import { PixiApp } from "./particle-system/PixiSetup";
 import { ParticleSystem } from "./particle-system/index";
-import { MetaballFilter } from "./filter/MetaballFilter";
-import { GoogleFontsLoader } from "./lib/FontLoader";
+import { MetaballFilter } from "./filter/metaballFilter";
+import { GoogleFontsLoader } from "./lib/fontloader";
 
 async function init() {
   // Noto Sansフォントを読み込み
@@ -16,7 +16,7 @@ async function init() {
   const pixiApp1 = app1.getApp();
 
   //　パーティクルシステムの生成
-  const particleSystem1 = new ParticleSystem(pixiApp1, {
+  new ParticleSystem(pixiApp1, {
     text: "Hello World",
     font: {
       size: "150px",
@@ -39,7 +39,7 @@ async function init() {
   });
 
   // フィルター適応
-  const filterManager = new MetaballFilter(pixiApp1, {
+  new MetaballFilter(pixiApp1, {
     blur: 0,
     threshold: 0,
     breakpoints: {
@@ -54,7 +54,7 @@ async function init() {
   const pixiApp2 = app2.getApp();
 
   // 画像パーティクルシステムの生成
-  const particleSystem2 = new ParticleSystem(pixiApp2, {
+  new ParticleSystem(pixiApp2, {
     imageSrc: "./image.png",
     imgWidth: 700,
     density: 4,
@@ -63,6 +63,7 @@ async function init() {
     mouseRadius: 80,
     breakpoints: {
       768: {
+        imgWidth: 300,
         density: 2,
         scale: 0.6,
       },

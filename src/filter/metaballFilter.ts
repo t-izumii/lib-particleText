@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
+import { getResponsiveOptions, type ResponsiveOptions } from "../particle-system/utils";
 
-export interface MetaballFilterOptions {
+export interface MetaballFilterOptions extends ResponsiveOptions {
   blur?: number;
   threshold?: number;
   breakpoints?: {
@@ -26,7 +27,7 @@ export class MetaballFilter {
     };
 
     // 現在の画面幅に応じた設定を適用
-    this.currentOptions = this.getResponsiveOptions();
+    this.currentOptions = getResponsiveOptions(this.baseOptions);
 
     // 初期フィルター適用
     this.applyFilters();
@@ -84,32 +85,6 @@ export class MetaballFilter {
     return this.thresholdFilter;
   }
 
-  /**
-   * 現在の画面幅に応じた設定を取得
-   */
-  private getResponsiveOptions(): MetaballFilterOptions {
-    const currentWidth = window.innerWidth;
-    let responsiveOptions = { ...this.baseOptions };
-
-    if (this.baseOptions.breakpoints) {
-      // breakpointsを幅の昇順でソート
-      const sortedBreakpoints = Object.keys(this.baseOptions.breakpoints)
-        .map(Number)
-        .sort((a, b) => a - b);
-
-      // 現在の幅以下の最大のbreakpointを見つける
-      for (const breakpoint of sortedBreakpoints) {
-        if (currentWidth <= breakpoint) {
-          responsiveOptions = {
-            ...responsiveOptions,
-            ...this.baseOptions.breakpoints[breakpoint],
-          };
-          break; // 最初に条件に合うbreakpointを適用して終了
-        }
-      }
-    }
-    return responsiveOptions;
-  }
 
   /**
    * リサイズイベントリスナーを設定
@@ -122,7 +97,7 @@ export class MetaballFilter {
    * リサイズハンドラー
    */
   private handleResize(): void {
-    const newOptions = this.getResponsiveOptions();
+    const newOptions = getResponsiveOptions(this.baseOptions);
 
     // オプションが変更された場合のみフィルターを再適用
     if (JSON.stringify(newOptions) !== JSON.stringify(this.currentOptions)) {

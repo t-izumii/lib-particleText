@@ -1,4 +1,5 @@
 import { scrollManager } from "./ScrollManager";
+import { PARTICLE_CONSTANTS } from "../particle-system/constants";
 
 export interface MousePosition {
   x: number;
@@ -62,8 +63,8 @@ class MouseStateManager {
         if (event.touches.length === 0) {
           this.isTouch = false;
           // 座標を画面外に移動（エフェクトを停止）
-          this.position.x = -1000;
-          this.position.y = -1000;
+          this.position.x = PARTICLE_CONSTANTS.TOUCH_END_POSITION;
+          this.position.y = PARTICLE_CONSTANTS.TOUCH_END_POSITION;
         }
       },
       { passive: true }
@@ -72,10 +73,10 @@ class MouseStateManager {
     // タッチがキャンセルされた場合もリセット
     window.addEventListener(
       "touchcancel",
-      (event) => {
+      () => {
         this.isTouch = false;
-        this.position.x = -1000;
-        this.position.y = -1000;
+        this.position.x = PARTICLE_CONSTANTS.TOUCH_END_POSITION;
+        this.position.y = PARTICLE_CONSTANTS.TOUCH_END_POSITION;
       },
       { passive: true }
     );
