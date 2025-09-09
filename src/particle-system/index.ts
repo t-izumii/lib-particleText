@@ -1,5 +1,4 @@
 import * as PIXI from "pixi.js";
-// import { ParticlePositionsGenerator } from "./ParticlePositionsGenerator";
 import { TextureGenerator } from "./TextureGenerator";
 import { ParticleManager } from "./ParticleManager";
 import { MouseInteraction } from "./MouseInteraction";
@@ -137,7 +136,7 @@ export class ParticleSystem {
     this.options = this.getResponsiveOptions();
 
     // 新しい設定でテキストからパーティクル座標を再生成
-    const particles = this.textureGenerator.generateTextCtx(
+    const particles = this.textureGenerator.generateFromText(
       this.options.text!,
       this.fontToString(this.options.font!),
       this.options.density!,

@@ -48,10 +48,10 @@ export class MouseInteraction {
     return Math.sqrt(dx * dx + dy * dy);
   }
 
-  /**
-   * study-10のロジックに基づく反発力計算
-   */
-  private calculateRepulsionForce(particle: ParticleData): { x: number; y: number } {
+  private calculateRepulsionForce(particle: ParticleData): {
+    x: number;
+    y: number;
+  } {
     const dx = this.mousePosition.x - particle.x;
     const dy = this.mousePosition.y - particle.y;
     const dist = this.calculateDistance(particle);
@@ -98,15 +98,11 @@ export class MouseInteraction {
     particle.y += particle.vy;
   }
 
-  /**
-   * パーティクルにマウス干渉を適用（study-10のロジック）
-   */
   applyMouseInteraction(particles: ParticleData[]): void {
     particles.forEach((particle) => {
       // 1. マウス反発力の計算と適用
       const repulsionForce = this.calculateRepulsionForce(particle);
       if (repulsionForce.x !== 0 || repulsionForce.y !== 0) {
-        // study-10と同じく減算で適用
         particle.vx -= repulsionForce.x;
         particle.vy -= repulsionForce.y;
       }
@@ -137,8 +133,7 @@ export class MouseInteraction {
       this.repelForce = settings.repelForce;
     if (settings.returnForce !== undefined)
       this.returnForce = settings.returnForce;
-    if (settings.friction !== undefined) 
-      this.friction = settings.friction;
+    if (settings.friction !== undefined) this.friction = settings.friction;
   }
 
   /**

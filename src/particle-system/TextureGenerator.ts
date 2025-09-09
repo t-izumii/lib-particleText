@@ -5,6 +5,7 @@ export class TextureGenerator {
   private ctx: CanvasRenderingContext2D;
   private str!: string;
   private fontString!: string;
+  private imageSrc!: string;
   private density!: number;
   private stageWidth!: number;
   private stageHeight!: number;
@@ -72,16 +73,98 @@ export class TextureGenerator {
     return extractor.getPositions();
   }
 
+  generateFromImage(
+    imageSrc: string,
+    density: number,
+    stageWidth: number,
+    stageHeight: number
+  ): Promise<{ x: number; y: number }[]> {
+    this.imageSrc = imageSrc;
+    this.density = density;
+    this.stageWidth = stageWidth;
+    this.stageHeight = stageHeight;
+
+    return new Promise((resolve, reject) => {
+      this.clearCanvas(this.stageWidth, this.stageHeight);
+
+      const image = new Image();
+      image.src = imageSrc;
+
+      image.onload = () => {
+        // 再度キャンバスをクリア（画像読み込み完了後）
+        this.clearCanvas(this.stageWidth, this.stageHeight);
+
+        // 画像のアスペクト比を計算
+        const imageAspect = image.width / image.height;
+        const canvasAspect = this.stageWidth / this.stageHeight;
+
+        let drawWidth: number;
+        let drawHeight: number;
+        let offsetX: number;
+        let offsetY: number;
+
+        // アスペクト比を保ちながらキャンバスに収まるサイズを計算（contain方式）
+        if (imageAspect > canvasAspect) {
+          // 画像が横長の場合、幅に合わせる
+          drawWidth = this.stageWidth;
+          drawHeight = this.stageWidth / imageAspect;
+          offsetX = 0;
+          offsetY = (this.stageHeight - drawHeight) / 2;
+        } else {
+          // 画像が縦長の場合、高さに合わせる
+          drawHeight = this.stageHeight;
+          drawWidth = this.stageHeight * imageAspect;
+          offsetX = (this.stageWidth - drawWidth) / 2;
+          offsetY = 0;
+        }
+
+        // アスペクト比を保ちながら中央に配置して描画
+        this.ctx.drawImage(image, offsetX, offsetY, drawWidth, drawHeight);
+
+        // ParticlePositionExtractorインスタンスを作成してpositionsを取得
+        const extractor = new ParticlePositionExtractor(
+          this.ctx,
+          this.density,
+          this.stageWidth,
+          this.stageHeight
+        );
+        
+        resolve(extractor.getPositions());
+      };
+
+      // エラーハンドリングも追加
+      image.onerror = () => {
+        console.error(`Failed to load image: ${imageSrc}`);
+        reject(new Error(`Failed to load image: ${imageSrc}`));
+      };
+    });
+  }
+
   resize(newWidth: number, newHeight: number) {
     this.stageWidth = newWidth;
     this.stageHeight = newHeight;
 
-    return this.generateFromText(
-      this.str,
-      this.fontString,
-      this.density,
-      this.stageWidth,
-      this.stageHeight
-    );
+    // テキストの場合
+    if (this.str && this.fontString) {
+      return this.generateFromText(
+        this.str,
+        this.fontString,
+        this.density,
+        this.stageWidth,
+        this.stageHeight
+      );
+    }
+
+    // 画像の場合（imageSrcが保存されている場合）
+    if (this.imageSrc) {
+      return this.generateFromImage(
+        this.imageSrc,
+        this.density,
+        this.stageWidth,
+        this.stageHeight
+      );
+    }
+
+    return [];
   }
 }
