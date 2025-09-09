@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { TextureGenerator } from "./TextureGenerator";
+import { ParticlePositionsGenerator } from "./ParticlePositionsGenerator";
 import { ParticleManager } from "./ParticleManager";
 import { MouseInteraction } from "./MouseInteraction";
 import { mouseState } from "../lib/MouseState";
@@ -28,7 +28,7 @@ export interface ParticleSystemOptions {
 }
 
 export class ParticleSystem {
-  private textureGenerator: TextureGenerator;
+  private textureGenerator: ParticlePositionsGenerator;
   private particleManager!: ParticleManager;
   private particleTexture?: PIXI.Texture;
   private pixiApp: PIXI.Application;
@@ -37,7 +37,7 @@ export class ParticleSystem {
   private baseOptions: ParticleSystemOptions;
 
   constructor(pixiApp: PIXI.Application, options: ParticleSystemOptions = {}) {
-    this.textureGenerator = new TextureGenerator();
+    this.textureGenerator = new ParticlePositionsGenerator();
     this.pixiApp = pixiApp;
     // デフォルト設定とユーザー設定をマージ
     this.baseOptions = {
@@ -124,7 +124,7 @@ export class ParticleSystem {
   /**
    * テクスチャジェネレーターを取得
    */
-  getTextureGenerator(): TextureGenerator {
+  getTextureGenerator(): ParticlePositionsGenerator {
     return this.textureGenerator;
   }
 

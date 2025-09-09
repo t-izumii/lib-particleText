@@ -1,3 +1,5 @@
+import { generateParticlePositions } from "./generateParticlePositions";
+
 export class TextureGenerator {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -30,7 +32,7 @@ export class TextureGenerator {
     this.ctx.globalAlpha = 1;
   }
 
-  generateParticlePositions(
+  generateCtx(
     str: string,
     fontString: string,
     density: number,
@@ -59,67 +61,19 @@ export class TextureGenerator {
       this.stageHeight / 2 // 垂直中央（シンプル）
     );
 
-    return this.extractTextPixels(
+    return new generateParticlePositions(
+      this.ctx,
       this.density,
       this.stageWidth,
       this.stageHeight
     );
   }
 
-  private extractTextPixels(
-    density: number,
-    stageWidth: number,
-    stageHeight: number
-  ) {
-    // キャンバス全体のピクセルデータを取得
-    const imageData = this.ctx.getImageData(0, 0, stageWidth, stageHeight).data;
-
-    const particles = [];
-    let i = 0; // 行カウンター
-    let width = 0; // 現在のX座標
-    let pixel: number; // 現在のピクセルのアルファ値
-
-    // Y軸方向にdensity間隔でスキャン
-    for (let height = 0; height < stageHeight; height += density) {
-      ++i;
-
-      // 六角格子パターン：偶数行をオフセットして配置
-      const slide = i % 2 === 0;
-      width = 0;
-
-      if (slide) {
-        width += 0; // 偶数行は6ピクセル右にずらす
-      }
-
-      // X軸方向にdensity間隔でスキャン
-      for (width; width < stageWidth; width += density) {
-        // ピクセルのアルファ値を取得（RGBA形式の4番目の要素）
-        pixel = imageData[(width + height * stageWidth) * 4 - 1];
-
-        // アルファ値が0でない（透明でない）かつ画面内の場合、座標を追加
-        if (
-          pixel !== 0 &&
-          width > 0 &&
-          width < stageWidth &&
-          height > 0 &&
-          height < stageHeight
-        ) {
-          particles.push({
-            x: width,
-            y: height,
-          });
-        }
-      }
-    }
-
-    return particles;
-  }
-
   resize(newWidth: number, newHeight: number) {
     this.stageWidth = newWidth;
     this.stageHeight = newHeight;
 
-    return this.generateParticlePositions(
+    return this.generateCtx(
       this.str,
       this.fontString,
       this.density,

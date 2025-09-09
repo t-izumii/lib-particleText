@@ -58,6 +58,11 @@ export class ParticleManager {
     positions: { x: number; y: number }[],
     stage: PIXI.Container
   ): void {
+    if (!Array.isArray(positions)) {
+      console.error('positions is not an array:', positions);
+      return;
+    }
+
     if (this.container) {
       this.container.destroy();
       this.particles = [];
@@ -66,7 +71,7 @@ export class ParticleManager {
     const maxParticles = 100000;
     const limitedPositions = positions.slice(0, maxParticles);
 
-    this.container = new PIXI.ParticleContainer(maxParticles); // ParticleContainerからContainerに変更
+    this.container = new PIXI.ParticleContainer(maxParticles);
 
     for (const position of limitedPositions) {
       const particle = new Particle(position, this.texture, this.options);
