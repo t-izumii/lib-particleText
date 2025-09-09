@@ -1,6 +1,6 @@
-import { PixiApp } from "./particle-system/setUpPixi";
+import { PixiApp } from "./particle-system/PixiSetup";
 import { ParticleSystem } from "./particle-system/index";
-import { MetaballFilter } from "./filter/metaballFilter";
+import { MetaballFilter } from "./filter/MetaballFilter";
 import { GoogleFontsLoader } from "./lib/fontloader";
 
 async function init() {

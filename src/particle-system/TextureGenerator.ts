@@ -30,7 +30,7 @@ export class TextureGenerator {
     this.ctx.globalAlpha = 1;
   }
 
-  setTextWithFont(
+  generateParticlePositions(
     str: string,
     fontString: string,
     density: number,
@@ -59,10 +59,10 @@ export class TextureGenerator {
       this.stageHeight / 2 // 垂直中央（シンプル）
     );
 
-    return this.dotPos(this.density, this.stageWidth, this.stageHeight);
+    return this.extractTextPixels(this.density, this.stageWidth, this.stageHeight);
   }
 
-  private dotPos(density: number, stageWidth: number, stageHeight: number) {
+  private extractTextPixels(density: number, stageWidth: number, stageHeight: number) {
     // キャンバス全体のピクセルデータを取得
     const imageData = this.ctx.getImageData(0, 0, stageWidth, stageHeight).data;
 
@@ -111,7 +111,7 @@ export class TextureGenerator {
     this.stageWidth = newWidth;
     this.stageHeight = newHeight;
 
-    return this.setTextWithFont(
+    return this.generateParticlePositions(
       this.str,
       this.fontString,
       this.density,

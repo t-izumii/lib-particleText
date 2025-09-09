@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
-import { TextureGenerator } from "./createTexture";
-import { createParticle } from "./createParticle";
+import { TextureGenerator } from "./TextureGenerator";
+import { ParticleManager } from "./ParticleManager";
 import { MouseInteraction } from "./MouseInteraction";
 import { mouseState } from "../lib/mouseState";
 
@@ -29,7 +29,7 @@ export interface ParticleSystemOptions {
 
 export class ParticleSystem {
   private textureGenerator: TextureGenerator;
-  private createParticle!: createParticle;
+  private particleManager!: ParticleManager;
   private particleTexture?: PIXI.Texture;
   private pixiApp: PIXI.Application;
   private mouseInteraction: MouseInteraction;
@@ -91,7 +91,7 @@ export class ParticleSystem {
     this.particleTexture = await PIXI.Assets.load("./particle.png");
 
     // テキストからパーティクル座標を生成
-    const particles = this.textureGenerator.setTextWithFont(
+    const particles = this.textureGenerator.generateParticlePositions(
       this.options.text!, // テキスト
       this.fontToString(this.options.font!), // フォント
       this.options.density!, // 密度
@@ -100,11 +100,11 @@ export class ParticleSystem {
     );
 
     // ParticleSystemを初期化してパーティクルを描画
-    this.createParticle = new createParticle(
+    this.particleManager = new ParticleManager(
       this.particleTexture,
       this.options
     );
-    this.createParticle.createParticles(particles, this.pixiApp.stage);
+    this.particleManager.renderParticles(particles, this.pixiApp.stage);
 
     this.setEventListener();
     this.startAnimation();
@@ -117,8 +117,8 @@ export class ParticleSystem {
   /**
    * パーティクルシステムを取得
    */
-  getCreateParticle(): createParticle {
-    return this.createParticle;
+  getParticleManager(): ParticleManager {
+    return this.particleManager;
   }
 
   /**
@@ -136,7 +136,7 @@ export class ParticleSystem {
     this.options = this.getResponsiveOptions();
 
     // 新しい設定でテキストからパーティクル座標を再生成
-    const particles = this.textureGenerator.setTextWithFont(
+    const particles = this.textureGenerator.generateParticlePositions(
       this.options.text!,
       this.fontToString(this.options.font!),
       this.options.density!,
@@ -145,8 +145,8 @@ export class ParticleSystem {
     );
 
     // パーティクルを再作成
-    this.createParticle.updateOptions(this.options);
-    this.createParticle.createParticles(particles, this.pixiApp.stage);
+    this.particleManager.updateOptions(this.options);
+    this.particleManager.renderParticles(particles, this.pixiApp.stage);
 
     // マウスインタラクションの設定も更新
     this.mouseInteraction.updateSettings({
@@ -195,13 +195,13 @@ export class ParticleSystem {
 
       // マウスインタラクションを適用
       this.mouseInteraction.updateMousePosition(relativePos.x, relativePos.y);
-      const createParticleInstance = this.getCreateParticle();
-      if (createParticleInstance) {
+      const particleManagerInstance = this.getParticleManager();
+      if (particleManagerInstance) {
         this.mouseInteraction.applyMouseInteraction(
-          createParticleInstance.getParticleData()
+          particleManagerInstance.getParticleStates()
         );
         // パーティクル位置を更新
-        createParticleInstance.updateParticles();
+        particleManagerInstance.updateParticlePositions();
       }
     });
   }

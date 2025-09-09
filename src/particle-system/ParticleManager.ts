@@ -37,7 +37,7 @@ class Particle {
   }
 }
 
-export class createParticle {
+export class ParticleManager {
   private particles: Particle[] = [];
   private container?: PIXI.ParticleContainer;
   private texture: PIXI.Texture;
@@ -54,7 +54,7 @@ export class createParticle {
     this.canvas = canvas;
   }
 
-  createParticles(
+  renderParticles(
     positions: { x: number; y: number }[],
     stage: PIXI.Container
   ): void {
@@ -80,14 +80,14 @@ export class createParticle {
   /**
    * パーティクルデータを取得（マウスインタラクション用）
    */
-  getParticleData(): ParticleData[] {
+  getParticleStates(): ParticleData[] {
     return this.particles.map((particle) => particle.data);
   }
 
   /**
    * パーティクル位置を更新
    */
-  updateParticles(): void {
+  updateParticlePositions(): void {
     this.particles.forEach((particle) => {
       particle.updatePosition();
     });
