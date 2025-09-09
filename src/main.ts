@@ -15,31 +15,33 @@ async function init() {
   const pixiApp = app.getApp();
 
   const particleSystem = new ParticleSystem(pixiApp, {
-    text: "Hello",
+    text: "Hello World",
     font: {
-      size: "200px",
+      size: "150px",
       family: "Noto Sans JP",
       weight: 700,
     },
     density: 5,
     scale: 1.3,
-    tint: 0x0000ff,
+    tint: 0x000000,
     mouseRadius: 100,
     breakpoints: {
       768: {
+        density: 2,
+        scale: 1,
         font: {
-          size: "100px",
+          size: "50px",
         },
       },
     },
   });
 
   // stageにフィルターを適用
-  pixiApp.stage.filters = [
-    new FilterManager().getBlurFilter(),
-    new FilterManager().getThresholdFilter(),
-  ];
-  pixiApp.stage.filterArea = pixiApp.renderer.screen;
+  // pixiApp.stage.filters = [
+  //   new FilterManager().getBlurFilter(),
+  //   new FilterManager().getThresholdFilter(),
+  // ];
+  // pixiApp.stage.filterArea = pixiApp.renderer.screen;
 }
 
 init();

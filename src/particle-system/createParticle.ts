@@ -66,7 +66,7 @@ export class createParticle {
     const maxParticles = 100000;
     const limitedPositions = positions.slice(0, maxParticles);
 
-    this.container = new PIXI.ParticleContainer(); // ParticleContainerからContainerに変更
+    this.container = new PIXI.ParticleContainer(maxParticles); // ParticleContainerからContainerに変更
 
     for (const position of limitedPositions) {
       const particle = new Particle(position, this.texture, this.options);
