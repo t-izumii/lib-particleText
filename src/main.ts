@@ -12,11 +12,11 @@ async function init() {
   });
 
   //　pixiの初期化
-  const app = new PixiApp(".js-ParticleText");
-  const pixiApp = app.getApp();
+  const app1 = new PixiApp(".js-ParticleText");
+  const pixiApp1 = app1.getApp();
 
   //　パーティクルシステムの生成
-  const particleSystem = new ParticleSystem(pixiApp, {
+  const particleSystem1 = new ParticleSystem(pixiApp1, {
     text: "Hello World",
     font: {
       size: "150px",
@@ -39,13 +39,32 @@ async function init() {
   });
 
   // フィルター適応
-  const filterManager = new MetaballFilter(pixiApp, {
+  const filterManager = new MetaballFilter(pixiApp1, {
     blur: 0,
     threshold: 0,
     breakpoints: {
       768: {
         blur: 0,
         threshold: 0,
+      },
+    },
+  });
+
+  const app2 = new PixiApp(".js-ParticleImage");
+  const pixiApp2 = app2.getApp();
+
+  // 画像パーティクルシステムの生成
+  const particleSystem2 = new ParticleSystem(pixiApp2, {
+    imageSrc: "./image.png",
+    imgWidth: 700,
+    density: 4,
+    scale: 1.0,
+    tint: 0x0066ff,
+    mouseRadius: 80,
+    breakpoints: {
+      768: {
+        density: 2,
+        scale: 0.6,
       },
     },
   });

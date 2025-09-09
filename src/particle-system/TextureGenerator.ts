@@ -6,6 +6,7 @@ export class TextureGenerator {
   private str!: string;
   private fontString!: string;
   private imageSrc!: string;
+  private imgWidth!: number;
   private density!: number;
   private stageWidth!: number;
   private stageHeight!: number;
@@ -77,9 +78,11 @@ export class TextureGenerator {
     imageSrc: string,
     density: number,
     stageWidth: number,
-    stageHeight: number
+    stageHeight: number,
+    imgWidth?: number
   ): Promise<{ x: number; y: number }[]> {
     this.imageSrc = imageSrc;
+    this.imgWidth = imgWidth || 0;
     this.density = density;
     this.stageWidth = stageWidth;
     this.stageHeight = stageHeight;
@@ -94,28 +97,35 @@ export class TextureGenerator {
         // 再度キャンバスをクリア（画像読み込み完了後）
         this.clearCanvas(this.stageWidth, this.stageHeight);
 
-        // 画像のアスペクト比を計算
-        const imageAspect = image.width / image.height;
-        const canvasAspect = this.stageWidth / this.stageHeight;
-
         let drawWidth: number;
         let drawHeight: number;
         let offsetX: number;
         let offsetY: number;
 
-        // アスペクト比を保ちながらキャンバスに収まるサイズを計算（contain方式）
-        if (imageAspect > canvasAspect) {
-          // 画像が横長の場合、幅に合わせる
-          drawWidth = this.stageWidth;
-          drawHeight = this.stageWidth / imageAspect;
-          offsetX = 0;
+        if (imgWidth) {
+          // imgWidthが指定されている場合、アスペクト比を保って高さを計算
+          drawWidth = imgWidth;
+          drawHeight = (imgWidth / image.width) * image.height;
+          offsetX = (this.stageWidth - drawWidth) / 2;
           offsetY = (this.stageHeight - drawHeight) / 2;
         } else {
-          // 画像が縦長の場合、高さに合わせる
-          drawHeight = this.stageHeight;
-          drawWidth = this.stageHeight * imageAspect;
-          offsetX = (this.stageWidth - drawWidth) / 2;
-          offsetY = 0;
+          // アスペクト比を保ちながらキャンバスに収まるサイズを計算（contain方式）
+          const imageAspect = image.width / image.height;
+          const canvasAspect = this.stageWidth / this.stageHeight;
+
+          if (imageAspect > canvasAspect) {
+            // 画像が横長の場合、幅に合わせる
+            drawWidth = this.stageWidth;
+            drawHeight = this.stageWidth / imageAspect;
+            offsetX = 0;
+            offsetY = (this.stageHeight - drawHeight) / 2;
+          } else {
+            // 画像が縦長の場合、高さに合わせる
+            drawHeight = this.stageHeight;
+            drawWidth = this.stageHeight * imageAspect;
+            offsetX = (this.stageWidth - drawWidth) / 2;
+            offsetY = 0;
+          }
         }
 
         // アスペクト比を保ちながら中央に配置して描画
@@ -161,7 +171,8 @@ export class TextureGenerator {
         this.imageSrc,
         this.density,
         this.stageWidth,
-        this.stageHeight
+        this.stageHeight,
+        this.imgWidth || undefined
       );
     }
 

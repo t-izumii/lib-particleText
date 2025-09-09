@@ -12,6 +12,8 @@ export interface FontOptions {
 
 export interface ParticleSystemOptions {
   text?: string;
+  imageSrc?: string;
+  imgWidth?: number;
   font?: FontOptions;
   density?: number;
   enableFilter?: boolean;
@@ -90,14 +92,28 @@ export class ParticleSystem {
     // パーティクル画像を読み込み（固定パス）
     this.particleTexture = await PIXI.Assets.load("./particle.png");
 
-    // テキストからパーティクル座標を生成
-    const particles = this.textureGenerator.generateFromText(
-      this.options.text!, // テキスト
-      this.fontToString(this.options.font!), // フォント
-      this.options.density!, // 密度
-      this.pixiApp.screen.width, // ステージ幅
-      this.pixiApp.screen.height // ステージ高さ
-    );
+    let particles: { x: number; y: number }[];
+
+    // テキストまたは画像からパーティクル座標を生成
+    if (this.options.imageSrc) {
+      // 画像からパーティクル座標を生成
+      particles = await this.textureGenerator.generateFromImage(
+        this.options.imageSrc,
+        this.options.density!,
+        this.pixiApp.screen.width,
+        this.pixiApp.screen.height,
+        this.options.imgWidth
+      );
+    } else {
+      // テキストからパーティクル座標を生成
+      particles = this.textureGenerator.generateFromText(
+        this.options.text!,
+        this.fontToString(this.options.font!),
+        this.options.density!,
+        this.pixiApp.screen.width,
+        this.pixiApp.screen.height
+      );
+    }
 
     // ParticleSystemを初期化してパーティクルを描画
     this.particleManager = new ParticleManager(
@@ -135,18 +151,37 @@ export class ParticleSystem {
     // breakpoint設定を再適用
     this.options = this.getResponsiveOptions();
 
-    // 新しい設定でテキストからパーティクル座標を再生成
-    const particles = this.textureGenerator.generateFromText(
-      this.options.text!,
-      this.fontToString(this.options.font!),
-      this.options.density!,
-      newWidth,
-      newHeight
-    );
+    // テキストまたは画像からパーティクル座標を再生成
+    let particles: { x: number; y: number }[] | Promise<{ x: number; y: number }[]>;
+    
+    if (this.options.imageSrc) {
+      particles = this.textureGenerator.generateFromImage(
+        this.options.imageSrc,
+        this.options.density!,
+        newWidth,
+        newHeight,
+        this.options.imgWidth
+      );
+    } else {
+      particles = this.textureGenerator.generateFromText(
+        this.options.text!,
+        this.fontToString(this.options.font!),
+        this.options.density!,
+        newWidth,
+        newHeight
+      );
+    }
 
-    // パーティクルを再作成
-    this.particleManager.updateOptions(this.options);
-    this.particleManager.renderParticles(particles, this.pixiApp.stage);
+    // Promiseの場合とそうでない場合を処理
+    if (particles instanceof Promise) {
+      particles.then((resolvedParticles) => {
+        this.particleManager.updateOptions(this.options);
+        this.particleManager.renderParticles(resolvedParticles, this.pixiApp.stage);
+      });
+    } else {
+      this.particleManager.updateOptions(this.options);
+      this.particleManager.renderParticles(particles, this.pixiApp.stage);
+    }
 
     // マウスインタラクションの設定も更新
     this.mouseInteraction.updateSettings({
