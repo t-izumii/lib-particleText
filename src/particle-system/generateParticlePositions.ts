@@ -41,7 +41,7 @@ export class generateParticlePositions {
       width = 0;
 
       if (slide) {
-        width += 0; // 偶数行は6ピクセル右にずらす
+        width += 6; // 偶数行は6ピクセル右にずらす
       }
 
       // X軸方向にdensity間隔でスキャン

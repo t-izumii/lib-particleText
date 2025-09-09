@@ -23,8 +23,8 @@ async function init() {
       family: "Noto Sans JP",
       weight: 700,
     },
-    density: 5,
-    scale: 1.3,
+    density: 6,
+    scale: 1.5,
     tint: 0x000000,
     mouseRadius: 100,
     breakpoints: {
@@ -40,12 +40,12 @@ async function init() {
 
   // フィルター適応
   const filterManager = new MetaballFilter(pixiApp, {
-    blur: 3, // デスクトップのデフォルト値
-    threshold: 0.7, // デスクトップのデフォルト値
+    blur: 0,
+    threshold: 0,
     breakpoints: {
       768: {
-        blur: 0, // 768px以下の時の値
-        threshold: 0.3, // 768px以下の時の値
+        blur: 0,
+        threshold: 0,
       },
     },
   });
