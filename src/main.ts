@@ -27,10 +27,10 @@ async function init() {
     mouseRadius: 100,
     breakpoints: {
       768: {
-        density: 2,
-        scale: 1,
+        density: 3,
+        scale: 0.8,
         font: {
-          size: "50px",
+          size: "60px",
         },
       },
     },
