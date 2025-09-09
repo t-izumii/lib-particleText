@@ -1,8 +1,16 @@
 import { PixiApp } from "./particle-system/setUpPixi";
 import { ParticleSystem } from "./particle-system/index";
 import { FilterManager } from "./filter/blurFilter";
+import { GoogleFontsLoader } from "./lib/fontloader";
 
 async function init() {
+  // Noto Sansフォントを読み込み
+  await GoogleFontsLoader.loadFont({
+    familyName: "Noto Sans JP",
+    weights: ["700"],
+    subsets: ["latin", "japanese"],
+  });
+
   const app = new PixiApp(".js-ParticleText");
   const pixiApp = app.getApp();
 
@@ -10,11 +18,11 @@ async function init() {
     text: "test",
     font: {
       size: "200px",
-      family: "Arial",
-      weight: 400,
+      family: "Noto Sans JP",
+      weight: 700,
     },
     density: 4,
-    scale: 2,
+    scale: 1,
     tint: 0x0000ff,
     mouseRadius: 100,
     breakpoints: {
@@ -27,11 +35,11 @@ async function init() {
   });
 
   // stageにフィルターを適用
-  pixiApp.stage.filters = [
-    new FilterManager().getBlurFilter(),
-    new FilterManager().getThresholdFilter(),
-  ];
-  pixiApp.stage.filterArea = pixiApp.renderer.screen;
+  // pixiApp.stage.filters = [
+  //   new FilterManager().getBlurFilter(),
+  //   new FilterManager().getThresholdFilter(),
+  // ];
+  // pixiApp.stage.filterArea = pixiApp.renderer.screen;
 }
 
 init();
