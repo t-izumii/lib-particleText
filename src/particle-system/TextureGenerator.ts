@@ -38,7 +38,7 @@ export class TextureGenerator {
     density: number,
     stageWidth: number,
     stageHeight: number
-  ) {
+  ): { x: number; y: number }[] {
     this.str = str;
     this.fontString = fontString;
     this.density = density;
@@ -61,12 +61,15 @@ export class TextureGenerator {
       this.stageHeight / 2 // 垂直中央（シンプル）
     );
 
-    return new generateParticlePositions(
+    // generateParticlePositionsインスタンスを作成してpositionsを取得
+    const generator = new generateParticlePositions(
       this.ctx,
       this.density,
       this.stageWidth,
       this.stageHeight
     );
+    
+    return generator.getPositions();
   }
 
   resize(newWidth: number, newHeight: number) {
