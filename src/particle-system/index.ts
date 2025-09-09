@@ -92,7 +92,7 @@ export class ParticleSystem {
     this.particleTexture = await PIXI.Assets.load("./particle.png");
 
     // テキストからパーティクル座標を生成
-    const particles = this.textureGenerator.generateTextCtx(
+    const particles = this.textureGenerator.generateFromText(
       this.options.text!, // テキスト
       this.fontToString(this.options.font!), // フォント
       this.options.density!, // 密度

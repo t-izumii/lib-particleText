@@ -1,4 +1,4 @@
-import { generateParticlePositions } from "./generateParticlePositions";
+import { ParticlePositionExtractor } from "./ParticlePositionExtractor";
 
 export class TextureGenerator {
   private canvas: HTMLCanvasElement;
@@ -32,7 +32,7 @@ export class TextureGenerator {
     this.ctx.globalAlpha = 1;
   }
 
-  generateTextCtx(
+  generateFromText(
     str: string,
     fontString: string,
     density: number,
@@ -61,22 +61,22 @@ export class TextureGenerator {
       this.stageHeight / 2 // 垂直中央（シンプル）
     );
 
-    // generateParticlePositionsインスタンスを作成してpositionsを取得
-    const generator = new generateParticlePositions(
+    // ParticlePositionExtractorインスタンスを作成してpositionsを取得
+    const extractor = new ParticlePositionExtractor(
       this.ctx,
       this.density,
       this.stageWidth,
       this.stageHeight
     );
     
-    return generator.getPositions();
+    return extractor.getPositions();
   }
 
   resize(newWidth: number, newHeight: number) {
     this.stageWidth = newWidth;
     this.stageHeight = newHeight;
 
-    return this.generateTextCtx(
+    return this.generateFromText(
       this.str,
       this.fontString,
       this.density,

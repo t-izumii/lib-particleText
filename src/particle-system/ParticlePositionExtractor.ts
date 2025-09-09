@@ -1,4 +1,4 @@
-export class generateParticlePositions {
+export class ParticlePositionExtractor {
   private ctx: CanvasRenderingContext2D;
   private density!: number;
   private stageWidth!: number;
