@@ -1,3 +1,5 @@
+import { scrollManager } from "./ScrollManager";
+
 export interface MousePosition {
   x: number;
   y: number;
@@ -93,9 +95,10 @@ class MouseStateManager {
    */
   getElementRelativePosition(element: HTMLElement): MousePosition {
     const rect = element.getBoundingClientRect();
+    const scroll = scrollManager.getPosition();
     return {
-      x: this.position.x - rect.left,
-      y: this.position.y - rect.top,
+      x: this.position.x - rect.left - scroll.x,
+      y: this.position.y - rect.top - scroll.y,
     };
   }
 }
