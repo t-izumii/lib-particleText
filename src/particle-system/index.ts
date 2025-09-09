@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { TextureGenerator } from "./createTexture";
 import { createParticle } from "./createParticle";
-import { MouseInteraction } from "../mouseEvent/MouseInteraction";
+import { MouseInteraction } from "./MouseInteraction";
 import { mouseState } from "../lib/mouseState";
 
 export interface FontOptions {
@@ -45,7 +45,7 @@ export class ParticleSystem {
       font: {
         size: "100px",
         family: "Arial",
-        weight: "normal"
+        weight: "normal",
       },
       density: 4,
       enableFilter: false,
@@ -58,7 +58,7 @@ export class ParticleSystem {
       friction: 0.92,
       ...options,
     };
-    
+
     // 現在の画面幅に応じた設定を適用
     this.options = this.getResponsiveOptions();
 
@@ -134,7 +134,7 @@ export class ParticleSystem {
 
     // breakpoint設定を再適用
     this.options = this.getResponsiveOptions();
-    
+
     // 新しい設定でテキストからパーティクル座標を再生成
     const particles = this.textureGenerator.setTextWithFont(
       this.options.text!,
@@ -143,17 +143,17 @@ export class ParticleSystem {
       newWidth,
       newHeight
     );
-    
+
     // パーティクルを再作成
     this.createParticle.updateOptions(this.options);
     this.createParticle.createParticles(particles, this.pixiApp.stage);
-    
+
     // マウスインタラクションの設定も更新
     this.mouseInteraction.updateSettings({
       repelRadius: this.options.mouseRadius!,
       repelForce: this.options.mouseForce!,
       returnForce: this.options.returnForce!,
-      friction: this.options.friction!
+      friction: this.options.friction!,
     });
   }
 
@@ -163,19 +163,19 @@ export class ParticleSystem {
   private getResponsiveOptions(): ParticleSystemOptions {
     const currentWidth = window.innerWidth;
     let responsiveOptions = { ...this.baseOptions };
-    
+
     if (this.baseOptions.breakpoints) {
       // breakpointsを幅の昇順でソート
       const sortedBreakpoints = Object.keys(this.baseOptions.breakpoints)
         .map(Number)
         .sort((a, b) => a - b);
-      
+
       // 現在の幅以下の最大のbreakpointを見つける
       for (const breakpoint of sortedBreakpoints) {
         if (currentWidth <= breakpoint) {
           responsiveOptions = {
             ...responsiveOptions,
-            ...this.baseOptions.breakpoints[breakpoint]
+            ...this.baseOptions.breakpoints[breakpoint],
           };
           break; // 最初に条件に合うbreakpointを適用して終了
         }

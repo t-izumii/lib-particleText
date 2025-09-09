@@ -4,19 +4,18 @@ export class FilterManager {
   private blurFilter!: PIXI.BlurFilter;
   private thresholdFilter!: PIXI.Filter;
 
-  constructor() {
-    this.setupFilters();
-  }
+  constructor() {}
 
-  /**
-   * ビジュアルエフェクト用のフィルターを設定
-   */
-  private setupFilters() {
+  private setBlurFilter(number: number) {
     // ブラーフィルターの設定
     this.blurFilter = new PIXI.BlurFilter();
-    this.blurFilter.blur = 2;
+    this.blurFilter.blur = number;
     this.blurFilter.autoFit = true;
 
+    return this.blurFilter;
+  }
+
+  private setThresholdFilter(number: number) {
     const fragSource = `
     precision mediump float;
     varying vec2 vTextureCoord;
@@ -37,7 +36,7 @@ export class FilterManager {
 
     // シェーダーに渡すユニフォーム変数
     const uniformData = {
-      threshold: 0.5,
+      threshold: number,
     };
 
     // カスタムフィルターを作成
@@ -49,14 +48,14 @@ export class FilterManager {
   /**
    * ブラーフィルターを取得
    */
-  getBlurFilter(): PIXI.BlurFilter {
-    return this.blurFilter;
+  getBlurFilter(number: number = 2): PIXI.BlurFilter {
+    return this.setBlurFilter(number);
   }
 
   /**
    * シュレッシュホールドフィルターを取得
    */
-  getThresholdFilter(): PIXI.Filter {
-    return this.thresholdFilter;
+  getThresholdFilter(number: number = 0.5): PIXI.Filter {
+    return this.setThresholdFilter(number);
   }
 }

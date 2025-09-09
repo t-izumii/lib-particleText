@@ -37,11 +37,11 @@ async function init() {
   });
 
   // stageにフィルターを適用
-  // pixiApp.stage.filters = [
-  //   new FilterManager().getBlurFilter(),
-  //   new FilterManager().getThresholdFilter(),
-  // ];
-  // pixiApp.stage.filterArea = pixiApp.renderer.screen;
+  pixiApp.stage.filters = [
+    new FilterManager().getBlurFilter(1),
+    new FilterManager().getThresholdFilter(0.5),
+  ];
+  pixiApp.stage.filterArea = pixiApp.renderer.screen;
 }
 
 init();

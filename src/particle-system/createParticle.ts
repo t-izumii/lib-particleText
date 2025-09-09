@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import type { ParticleData } from "../mouseEvent/MouseInteraction";
+import type { ParticleData } from "./MouseInteraction";
 
 class Particle {
   public sprite: PIXI.Sprite;
