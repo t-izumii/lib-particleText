@@ -9,10 +9,10 @@ class MouseStateManager {
   private isTouch = false; // タッチ操作中かどうか
 
   constructor() {
-    this.initializeMouseTracking();
+    this.initializeEventListeners();
   }
 
-  private initializeMouseTracking(): void {
+  private initializeEventListeners(): void {
     if (this.isInitialized) return;
 
     // マウスイベント（デスクトップ）
@@ -65,16 +65,16 @@ class MouseStateManager {
   }
 
   /**
-   * 現在のマウス座標を取得
+   * 現在のグローバルマウス座標を取得
    */
-  getPosition(): MousePosition {
+  getGlobalPosition(): MousePosition {
     return { ...this.position };
   }
 
   /**
    * 指定要素に対する相対座標を取得
    */
-  getRelativePosition(element: HTMLElement): MousePosition {
+  getElementRelativePosition(element: HTMLElement): MousePosition {
     const rect = element.getBoundingClientRect();
     return {
       x: this.position.x - rect.left,
@@ -85,7 +85,7 @@ class MouseStateManager {
   /**
    * マウス座標を手動で設定（テスト用）
    */
-  setPosition(x: number, y: number): void {
+  setGlobalPosition(x: number, y: number): void {
     this.position.x = x;
     this.position.y = y;
   }
@@ -93,7 +93,7 @@ class MouseStateManager {
   /**
    * 現在タッチ中かどうかを取得
    */
-  getIsTouch(): boolean {
+  getIsTouchActive(): boolean {
     return this.isTouch;
   }
 }

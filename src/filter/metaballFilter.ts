@@ -45,7 +45,7 @@ export class MetaballFilter {
     this.pixiApp.stage.filterArea = this.pixiApp.renderer.screen;
   }
 
-  private setBlurFilter(number: number) {
+  private createBlurFilter(number: number) {
     // ブラーフィルターの設定
     this.blurFilter = new PIXI.BlurFilter();
     this.blurFilter.blur = number;
@@ -54,7 +54,7 @@ export class MetaballFilter {
     return this.blurFilter;
   }
 
-  private setThresholdFilter(number: number) {
+  private createThresholdFilter(number: number) {
     const fragSource = `
     precision mediump float;
     varying vec2 vTextureCoord;
@@ -147,8 +147,8 @@ export class MetaballFilter {
         ? options.threshold
         : this.currentOptions.threshold!;
 
-    const blurFilter = this.setBlurFilter(blur);
-    const thresholdFilter = this.setThresholdFilter(threshold);
+    const blurFilter = this.createBlurFilter(blur);
+    const thresholdFilter = this.createThresholdFilter(threshold);
 
     return [blurFilter, thresholdFilter];
   }

@@ -1,11 +1,11 @@
 import { PixiApp } from "./particle-system/PixiSetup";
 import { ParticleSystem } from "./particle-system/index";
 import { MetaballFilter } from "./filter/MetaballFilter";
-import { GoogleFontsLoader } from "./lib/fontloader";
+import { GoogleFontsLoader } from "./lib/FontLoader";
 
 async function init() {
   // Noto Sansフォントを読み込み
-  await GoogleFontsLoader.loadFont({
+  await GoogleFontsLoader.loadGoogleFont({
     familyName: "Noto Sans JP",
     weights: ["700"],
     subsets: ["latin", "japanese"],

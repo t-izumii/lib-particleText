@@ -13,7 +13,7 @@ export class GoogleFontsLoader {
   private static loadedFonts = new Set<string>();
   private static loadingFonts = new Map<string, Promise<void>>();
 
-  static async loadFont(options: FontLoadOptions): Promise<void> {
+  static async loadGoogleFont(options: FontLoadOptions): Promise<void> {
     const { familyName, weights = ["400"], subsets = ["latin"] } = options;
     const fontKey = `${familyName}_${weights.join(",")}_${subsets.join(",")}`;
 
@@ -22,7 +22,7 @@ export class GoogleFontsLoader {
       return await this.loadingFonts.get(fontKey)!;
     }
 
-    const loadPromise = this.performLoad(familyName, weights, subsets, fontKey);
+    const loadPromise = this.performFontLoad(familyName, weights, subsets, fontKey);
     this.loadingFonts.set(fontKey, loadPromise);
 
     try {
@@ -32,13 +32,13 @@ export class GoogleFontsLoader {
     }
   }
 
-  private static async performLoad(
+  private static async performFontLoad(
     familyName: string,
     weights: string[],
     subsets: string[],
     fontKey: string
   ): Promise<void> {
-    const url = this.buildURL(familyName, weights, subsets);
+    const url = this.buildGoogleFontsURL(familyName, weights, subsets);
     const response = await fetch(url);
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -60,7 +60,7 @@ export class GoogleFontsLoader {
     this.loadedFonts.add(fontKey);
   }
 
-  private static buildURL(
+  private static buildGoogleFontsURL(
     familyName: string,
     weights: string[],
     subsets: string[]

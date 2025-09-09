@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { TextureGenerator } from "./TextureGenerator";
 import { ParticleManager } from "./ParticleManager";
 import { MouseInteraction } from "./MouseInteraction";
-import { mouseState } from "../lib/mouseState";
+import { mouseState } from "../lib/MouseState";
 
 export interface FontOptions {
   size?: string;
@@ -191,7 +191,7 @@ export class ParticleSystem {
     this.pixiApp.ticker.add(() => {
       // グローバルマウス座標を取得してキャンバス相対座標に変換
       const canvas = this.pixiApp.view as HTMLCanvasElement;
-      const relativePos = mouseState.getRelativePosition(canvas);
+      const relativePos = mouseState.getElementRelativePosition(canvas);
 
       // マウスインタラクションを適用
       this.mouseInteraction.updateMousePosition(relativePos.x, relativePos.y);
