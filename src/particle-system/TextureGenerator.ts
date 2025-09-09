@@ -59,10 +59,18 @@ export class TextureGenerator {
       this.stageHeight / 2 // 垂直中央（シンプル）
     );
 
-    return this.extractTextPixels(this.density, this.stageWidth, this.stageHeight);
+    return this.extractTextPixels(
+      this.density,
+      this.stageWidth,
+      this.stageHeight
+    );
   }
 
-  private extractTextPixels(density: number, stageWidth: number, stageHeight: number) {
+  private extractTextPixels(
+    density: number,
+    stageWidth: number,
+    stageHeight: number
+  ) {
     // キャンバス全体のピクセルデータを取得
     const imageData = this.ctx.getImageData(0, 0, stageWidth, stageHeight).data;
 

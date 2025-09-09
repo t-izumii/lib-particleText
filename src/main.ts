@@ -11,9 +11,11 @@ async function init() {
     subsets: ["latin", "japanese"],
   });
 
+  //　pixiの初期化
   const app = new PixiApp(".js-ParticleText");
   const pixiApp = app.getApp();
 
+  //　パーティクルシステムの生成
   const particleSystem = new ParticleSystem(pixiApp, {
     text: "Hello World",
     font: {
@@ -36,7 +38,7 @@ async function init() {
     },
   });
 
-  // MetaballFilterでbreakpointsとフィルター適用を完全管理
+  // フィルター適応
   const filterManager = new MetaballFilter(pixiApp, {
     blur: 3, // デスクトップのデフォルト値
     threshold: 0.7, // デスクトップのデフォルト値

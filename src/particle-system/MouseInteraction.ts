@@ -43,7 +43,7 @@ export class MouseInteraction {
    * パーティクルにマウス干渉を適用
    */
   applyMouseInteraction(particles: ParticleData[]): void {
-    particles.forEach(particle => {
+    particles.forEach((particle) => {
       // マウスからパーティクルへの距離を計算
       const dx = particle.x - this.mousePosition.x;
       const dy = particle.y - this.mousePosition.y;
@@ -56,7 +56,8 @@ export class MouseInteraction {
         const normalizedY = dy / distance;
 
         // 距離に基づく反発力（近いほど強い）
-        const force = (this.repelRadius - distance) / this.repelRadius * this.repelForce;
+        const force =
+          ((this.repelRadius - distance) / this.repelRadius) * this.repelForce;
 
         // 速度に反発力を加算
         particle.vx += normalizedX * force;
@@ -66,7 +67,7 @@ export class MouseInteraction {
       // 元の位置に戻る力
       const returnDx = particle.originalX - particle.x;
       const returnDy = particle.originalY - particle.y;
-      
+
       particle.vx += returnDx * this.returnForce;
       particle.vy += returnDy * this.returnForce;
 
@@ -89,9 +90,12 @@ export class MouseInteraction {
     returnForce?: number;
     friction?: number;
   }): void {
-    if (settings.repelRadius !== undefined) this.repelRadius = settings.repelRadius;
-    if (settings.repelForce !== undefined) this.repelForce = settings.repelForce;
-    if (settings.returnForce !== undefined) this.returnForce = settings.returnForce;
+    if (settings.repelRadius !== undefined)
+      this.repelRadius = settings.repelRadius;
+    if (settings.repelForce !== undefined)
+      this.repelForce = settings.repelForce;
+    if (settings.returnForce !== undefined)
+      this.returnForce = settings.returnForce;
     if (settings.friction !== undefined) this.friction = settings.friction;
   }
 
