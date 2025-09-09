@@ -11,7 +11,7 @@ async function init() {
     font: {
       size: "200px",
       family: "Arial",
-      weight: 400, // 数値で指定する場合
+      weight: 400,
     },
     density: 4,
     scale: 2,

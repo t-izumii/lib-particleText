@@ -9,7 +9,7 @@ body {
 
 canvas {
   display: block;
-  /* touch-action: manipulation; */
+  touch-action: none; /* タッチジェスチャーを無効にしてカスタムハンドリングを可能にする */
 }
 
 img {
