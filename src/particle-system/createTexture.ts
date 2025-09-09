@@ -59,7 +59,10 @@ export class TextureGenerator {
       this.stageHeight / 2 // 垂直中央（シンプル）
     );
 
-    // 描画されたテキストからパーティクル座標を抽出
+    //　debug
+    this.canvas.title = `テキスト描画デバッグ: "${this.str}" (density: ${this.density})`;
+    document.body.appendChild(this.canvas);
+
     return this.dotPos(this.density, this.stageWidth, this.stageHeight);
   }
 
