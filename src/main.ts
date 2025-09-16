@@ -26,11 +26,12 @@ async function init() {
     density: 6,
     scale: 1.5,
     tint: 0x000000,
-    mouseRadius: 100,
+    mouseRadius: 60,
     breakpoints: {
       768: {
         density: 3,
         scale: 0.8,
+        mouseRadius: 20,
         font: {
           size: "60px",
         },
@@ -40,8 +41,8 @@ async function init() {
 
   // フィルター適応
   new MetaballFilter(pixiApp1, {
-    blur: 0,
-    threshold: 0,
+    blur: 6,
+    threshold: 0.4,
     breakpoints: {
       768: {
         blur: 0,
@@ -56,16 +57,17 @@ async function init() {
   // 画像パーティクルシステムの生成
   new ParticleSystem(pixiApp2, {
     imageSrc: "./image.png",
-    imgWidth: 700,
+    imgWidth: 500,
     density: 4,
     scale: 1.0,
     tint: 0x0066ff,
-    mouseRadius: 80,
+    mouseRadius: 60,
     breakpoints: {
       768: {
         imgWidth: 300,
         density: 2,
         scale: 0.6,
+        mouseRadius: 20,
       },
     },
   });
