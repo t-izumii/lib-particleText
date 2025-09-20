@@ -21,7 +21,10 @@ class Particle {
     this.sprite.x = position.x;
     this.sprite.y = position.y;
     this.sprite.anchor.set(options?.anchor ?? DEFAULT_PARTICLE_OPTIONS.anchor);
-    this.sprite.scale.set((options?.scale ?? DEFAULT_PARTICLE_OPTIONS.scale) / PARTICLE_CONSTANTS.SCALE_DIVISOR);
+    this.sprite.scale.set(
+      (options?.scale ?? DEFAULT_PARTICLE_OPTIONS.scale) /
+        PARTICLE_CONSTANTS.SCALE_DIVISOR
+    );
     this.sprite.tint = options?.tint ?? DEFAULT_PARTICLE_OPTIONS.tint;
 
     // パーティクルデータを初期化
@@ -50,10 +53,7 @@ export class ParticleManager {
   private texture: PIXI.Texture;
   private options: ParticleOptions;
 
-  constructor(
-    texture: PIXI.Texture,
-    options: ParticleOptions = {}
-  ) {
+  constructor(texture: PIXI.Texture, options: ParticleOptions = {}) {
     this.texture = texture;
     this.options = options;
   }
@@ -63,7 +63,7 @@ export class ParticleManager {
     stage: PIXI.Container
   ): void {
     if (!Array.isArray(positions)) {
-      console.error('positions is not an array:', positions);
+      console.error("positions is not an array:", positions);
       return;
     }
 
@@ -107,8 +107,12 @@ export class ParticleManager {
     this.options = { ...this.options, ...options };
     // 既存のパーティクルの見た目を更新
     this.particles.forEach((particle) => {
-      particle.sprite.anchor.set(this.options.anchor ?? DEFAULT_PARTICLE_OPTIONS.anchor);
-      particle.sprite.scale.set(this.options.scale ?? DEFAULT_PARTICLE_OPTIONS.scale);
+      particle.sprite.anchor.set(
+        this.options.anchor ?? DEFAULT_PARTICLE_OPTIONS.anchor
+      );
+      particle.sprite.scale.set(
+        this.options.scale ?? DEFAULT_PARTICLE_OPTIONS.scale
+      );
       particle.sprite.tint = this.options.tint ?? DEFAULT_PARTICLE_OPTIONS.tint;
     });
   }
@@ -119,7 +123,7 @@ export class ParticleManager {
   cleanup(): void {
     if (this.container) {
       // 各パーティクルのテクスチャを適切に破棄
-      this.particles.forEach(particle => {
+      this.particles.forEach((particle) => {
         if (particle.sprite.texture && particle.sprite.texture.baseTexture) {
           // カスタムテクスチャの場合のみ破棄（共有テクスチャは破棄しない）
           if (particle.sprite.texture !== this.texture) {
@@ -128,11 +132,11 @@ export class ParticleManager {
         }
         particle.sprite.destroy();
       });
-      
+
       this.container.destroy({
         children: true,
         texture: false, // 共有テクスチャは保持
-        baseTexture: false
+        baseTexture: false,
       });
       this.container = undefined;
       this.particles = [];
@@ -144,9 +148,5 @@ export class ParticleManager {
    */
   destroy(): void {
     this.cleanup();
-    // メインテクスチャも破棄する場合（使用時は注意）
-    // if (this.texture && !this.texture.baseTexture.destroyed) {
-    //   this.texture.destroy();
-    // }
   }
 }
