@@ -20,7 +20,6 @@ export class MouseInteraction {
 
   constructor(
     repelRadius: number = 100,
-    _repelForce: number = 0.5,
     returnForce: number = 0.02,
     friction: number = 0.95
   ) {
@@ -121,13 +120,11 @@ export class MouseInteraction {
    */
   updateSettings(settings: {
     repelRadius?: number;
-    repelForce?: number;
     returnForce?: number;
     friction?: number;
   }): void {
     if (settings.repelRadius !== undefined)
       this.mousePosition.radius = settings.repelRadius;
-    // repelForce は現在使用されていない
     if (settings.returnForce !== undefined)
       this.returnForce = settings.returnForce;
     if (settings.friction !== undefined) this.friction = settings.friction;

@@ -1,9 +1,18 @@
-import { scrollManager } from "./ScrollManager";
 import { PARTICLE_CONSTANTS } from "../particle-system/constants";
 
 export interface MousePosition {
   x: number;
   y: number;
+}
+
+/**
+ * 軽量なスクロール位置取得ユーティリティ
+ */
+function getScrollPosition(): { x: number; y: number } {
+  return {
+    x: window.scrollX || window.pageXOffset,
+    y: window.scrollY || window.pageYOffset,
+  };
 }
 
 class MouseStateManager {
@@ -96,7 +105,7 @@ class MouseStateManager {
    */
   getElementRelativePosition(element: HTMLElement): MousePosition {
     const rect = element.getBoundingClientRect();
-    const scroll = scrollManager.getPosition();
+    const scroll = getScrollPosition();
     return {
       x: this.position.x - rect.left - scroll.x,
       y: this.position.y - rect.top - scroll.y,

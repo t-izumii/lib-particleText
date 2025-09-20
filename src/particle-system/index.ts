@@ -23,7 +23,6 @@ export interface ParticleSystemOptions extends ResponsiveOptions {
   scale?: number;
   tint?: number;
   mouseRadius?: number;
-  mouseForce?: number;
   returnForce?: number;
   friction?: number;
   breakpoints?: {
@@ -57,7 +56,6 @@ export class ParticleSystem {
       scale: 0.1,
       tint: 0x000000,
       mouseRadius: 120,
-      mouseForce: 0.8,
       returnForce: 0.03,
       friction: 0.92,
       ...options,
@@ -69,7 +67,6 @@ export class ParticleSystem {
     // マウスインタラクションを初期化
     this.mouseInteraction = new MouseInteraction(
       this.options.mouseRadius!, // 反発半径
-      this.options.mouseForce!, // 反発力
       this.options.returnForce!, // 復帰力
       this.options.friction! // 摩擦
     );
@@ -210,7 +207,6 @@ export class ParticleSystem {
     // マウスインタラクションの設定も更新
     this.mouseInteraction.updateSettings({
       repelRadius: this.options.mouseRadius!,
-      repelForce: this.options.mouseForce!,
       returnForce: this.options.returnForce!,
       friction: this.options.friction!,
     });
