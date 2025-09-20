@@ -1,18 +1,9 @@
+import { getScrollPosition } from "./ScrollManager";
 import { PARTICLE_CONSTANTS } from "../particle-system/constants";
 
 export interface MousePosition {
   x: number;
   y: number;
-}
-
-/**
- * 軽量なスクロール位置取得ユーティリティ
- */
-function getScrollPosition(): { x: number; y: number } {
-  return {
-    x: window.scrollX || window.pageXOffset,
-    y: window.scrollY || window.pageYOffset,
-  };
 }
 
 class MouseStateManager {
